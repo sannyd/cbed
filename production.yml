@@ -25,8 +25,8 @@ services:
       dockerfile: ./compose/production/postgres/Dockerfile
     image: cbed_production_postgres
     volumes:
-      - production_postgres_data:/var/lib/postgresql/data:Z
-      - production_postgres_data_backups:/backups:z
+      - ./production_postgres_data:/var/lib/postgresql/data:Z
+      - ./production_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.production/.postgres
 
@@ -44,20 +44,20 @@ services:
       - "0.0.0.0:443:443"
       - "0.0.0.0:5555:5555"
 
-  redis:
-    image: redis:5.0
-
-  celeryworker:
-    <<: *django
-    image: cbed_production_celeryworker
-    command: /start-celeryworker
-
-  celerybeat:
-    <<: *django
-    image: cbed_production_celerybeat
-    command: /start-celerybeat
-
-  flower:
-    <<: *django
-    image: cbed_production_flower
-    command: /start-flower
+#  redis:
+#    image: redis:5.0
+#
+#  celeryworker:
+#    <<: *django
+#    image: cbed_production_celeryworker
+#    command: /start-celeryworker
+#
+#  celerybeat:
+#    <<: *django
+#    image: cbed_production_celerybeat
+#    command: /start-celerybeat
+#
+#  flower:
+#    <<: *django
+#    image: cbed_production_flower
+#    command: /start-flower
