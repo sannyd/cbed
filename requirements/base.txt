@@ -25,3 +25,4 @@ django-import-export==2.5.0
 django-filter==2.4.0
 drf-yasg==1.20.0
 google-auth==1.31.0
+djangorestframework-simplejwt==4.7.1
