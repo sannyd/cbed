@@ -28,20 +28,18 @@ class RegisterSerializer(AppSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
 
-    def validate(self, attrs):
-        if User.objects.filter(email=(attrs["email"].lower())).exists():
+    def create(self, validated_data):
+        email = validated_data["email"].lower()
+        if User.objects.filter(email=email).exists():
             raise serializers.ValidationError(
                 {"email": "This email has been registered"}
             )
-
-    def create(self, validated_data):
-        email = validated_data["email"].lower()
         password = validated_data["password"]
 
         return User.objects.create(
             username=email,
             email=email,
-            password=password,
+            password=make_password(password),
         )
 
 
