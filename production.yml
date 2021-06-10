@@ -14,8 +14,6 @@ services:
     depends_on:
       - postgres
       - redis
-    volumes:
-      - .:/app:z
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
@@ -27,7 +25,7 @@ services:
       dockerfile: ./compose/production/postgres/Dockerfile
     image: cbed_production_postgres
     volumes:
-      - ./production_postgres_data:/var/lib/postgresql/data:Z
+      - production_postgres_data:/var/lib/postgresql/data:Z
       - ./production_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.production/.postgres
