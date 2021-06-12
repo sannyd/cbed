@@ -92,6 +92,7 @@ class SSOSerializer(AppSerializer):
             auth_user = User.objects.create(
                 username=user_email,
                 email=user_email,
+                # is_verified=True,
             )
 
         if auth_user and not auth_user.is_active:

@@ -2,13 +2,13 @@ from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_yasg import openapi
-from rest_framework import permissions
-from rest_framework.authtoken.views import obtain_auth_token
 from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -19,18 +19,22 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+AdminSite.site_header = "CBED administration"
+AdminSite.site_title = "CBED site admin"
+AdminSite.index_title = 'CBED administration'
+
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
-    # Django Admin, use {% url 'admin:index' %}
-    path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path("users/", include("cbed.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
-    # Your stuff: custom urls includes go here
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+                  path(
+                      "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+                  ),
+                  # Django Admin, use {% url 'admin:index' %}
+                  path(settings.ADMIN_URL, admin.site.urls),
+                  # User management
+                  path("users/", include("cbed.users.urls", namespace="users")),
+                  path("accounts/", include("allauth.urls")),
+                  # Your stuff: custom urls includes go here
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
 urlpatterns += [

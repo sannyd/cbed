@@ -73,11 +73,14 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "drf_yasg",
+    "adminsortable2",
+    "django_extensions"
 ]
 
 LOCAL_APPS = [
     "cbed.users.apps.UsersConfig",
     "cbed.authentication",
+    "cbed.main",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
