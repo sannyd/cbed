@@ -11,6 +11,7 @@ User = get_user_model()
 
 class UserViewSet(GenericViewSet):
     queryset = User.objects.all()
+    serializer_class = UserSerializer
 
     @action(detail=False, methods=["GET"])
     def me(self, request):

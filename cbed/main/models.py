@@ -20,7 +20,7 @@ class Section(TimeStampedModel):
     name = models.CharField(max_length=255)
     youtube_url = models.CharField(max_length=1000, blank=True)
     pdf_url = models.CharField(max_length=1000, blank=True)
-    level = models.ForeignKey(Level, on_delete=models.CASCADE)
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name="sections")
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
@@ -33,7 +33,7 @@ class Section(TimeStampedModel):
 
 class Question(TimeStampedModel):
     content = models.TextField()
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.CASCADE, related_name="questions")
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
@@ -46,7 +46,7 @@ class Answer(TimeStampedModel):
     discussion = models.TextField()
     is_correct = models.BooleanField()
 
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="answers")
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
