@@ -1,5 +1,4 @@
 from rest_framework import mixins
-from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from cbed.main.api.serializers import (
@@ -13,7 +12,6 @@ from cbed.main.models import Level, Section
 class LevelViewSet(ReadOnlyModelViewSet):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
-    permission_classes = [AllowAny]
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -24,4 +22,3 @@ class LevelViewSet(ReadOnlyModelViewSet):
 class SectionViewSet(mixins.RetrieveModelMixin, GenericViewSet):
     queryset = Section.objects.all()
     serializer_class = SectionDetailSerializer
-    permission_classes = [AllowAny]
