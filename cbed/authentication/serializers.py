@@ -86,16 +86,11 @@ class SSOSerializer(AppSerializer):
         else:
             raise SSOMissingEmailAddressException()
 
-        auth_user = User.objects.filter(email=user_email).first()
+        auth_user, created = User.objects.get_or_create(
+            username=user_email, email=user_email
+        )
 
-        if not auth_user:
-            auth_user = User.objects.create(
-                username=user_email,
-                email=user_email,
-                # is_verified=True,
-            )
-
-        if auth_user and not auth_user.is_active:
+        if not auth_user.is_active:
             raise UserIsDeactivatedException()
 
         return auth_user

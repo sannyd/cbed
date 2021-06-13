@@ -6,6 +6,7 @@ from cbed.main.models import Level, Section, Question, Answer
 
 class SectionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Section
+    show_change_link = True
 
 
 @admin.register(Level)
@@ -16,6 +17,7 @@ class LevelAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 class QuestionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Question
+    show_change_link = True
 
 
 @admin.register(Section)
@@ -27,6 +29,7 @@ class SectionAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 class AnswerInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Answer
+    show_change_link = True
 
 
 @admin.register(Question)

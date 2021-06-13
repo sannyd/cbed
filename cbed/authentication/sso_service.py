@@ -9,11 +9,11 @@ from config.exception import FacebookNotLinkedToEmailException
 class SSOService:
     @staticmethod
     def verify_google_auth(access_token):
-        # try:
+        try:
             id_info = id_token.verify_token(access_token, requests.Request())
             return id_info["email"]
-        # except ValueError:
-        #     raise AuthenticationFailed
+        except ValueError:
+            raise AuthenticationFailed
 
     @staticmethod
     def verify_facebook_auth(access_token):
