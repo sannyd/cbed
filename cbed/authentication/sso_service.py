@@ -10,7 +10,7 @@ class SSOService:
     @staticmethod
     def verify_google_auth(access_token):
         try:
-            id_info = id_token.verify_token(access_token, requests.Request())
+            id_info = id_token.verify_oauth2_token(access_token, requests.Request())
             return id_info["email"]
         except ValueError:
             raise AuthenticationFailed
