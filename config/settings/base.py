@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "adminsortable2",
     "django_extensions",
+    "django_better_admin_arrayfield"
 ]
 
 LOCAL_APPS = [
@@ -304,7 +305,6 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup

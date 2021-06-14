@@ -1,3 +1,4 @@
+from django_better_admin_arrayfield.models.fields import ArrayField
 from django.db import models
 
 # Create your models here.
@@ -18,8 +19,8 @@ class Level(TimeStampedModel):
 
 class Section(TimeStampedModel):
     name = models.CharField(max_length=255)
-    youtube_url = models.CharField(max_length=1000, blank=True)
-    pdf_url = models.CharField(max_length=1000, blank=True)
+    youtube_urls = ArrayField(models.URLField(max_length=1000, blank=True), default=list, blank=True)
+    pdf_urls = ArrayField(models.URLField(max_length=1000, blank=True), default=list, blank=True)
     level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name="sections")
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)

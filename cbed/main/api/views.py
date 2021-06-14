@@ -1,4 +1,5 @@
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from cbed.main.api.serializers import (
@@ -24,6 +25,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
     serializer_class = SectionSearchSerializer
     filter_backends = (SearchFilter,)
     search_fields = ('name', "level__name")
+    pagination_class = LimitOffsetPagination
 
     def get_serializer_class(self):
         if self.action == "retrieve":

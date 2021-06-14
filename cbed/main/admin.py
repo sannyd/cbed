@@ -1,5 +1,6 @@
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.contrib import admin
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from cbed.main.models import Level, Section, Question, Answer
 
@@ -21,8 +22,8 @@ class QuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 
 
 @admin.register(Section)
-class SectionAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ["name", "level", "youtube_url", "pdf_url", "created", "modified"]
+class SectionAdmin(SortableAdminMixin, admin.ModelAdmin, DynamicArrayMixin):
+    list_display = ["name", "level", "created", "modified"]
     list_filter = ["level"]
     inlines = [QuestionInline]
 
