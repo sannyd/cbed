@@ -8,6 +8,7 @@ from cbed.main.models import Level, Section, Question, Answer
 class SectionInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Section
     show_change_link = True
+    fields = ["name"]
 
 
 @admin.register(Level)
