@@ -1,7 +1,7 @@
 from django.conf import settings
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
-from cbed.main.api.views import LevelViewSet, SectionViewSet
+from cbed.main.views import LevelViewSet, SectionViewSet
 from cbed.users.api.views import UserViewSet
 
 if settings.DEBUG:

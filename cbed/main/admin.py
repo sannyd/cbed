@@ -2,7 +2,7 @@ from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.contrib import admin
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
-from cbed.main.models import Level, Section, Question, Answer
+from cbed.main.models import Level, Section, Question, Answer, Result
 
 
 class SectionInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -47,6 +47,19 @@ class QuestionAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(Answer)
 class AnswerAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ["content", "discussion", "is_correct", "question", "created", "modified"]
+    list_display = [
+        "content",
+        "discussion",
+        "is_correct",
+        "question",
+        "created",
+        "modified",
+    ]
     list_filter = ["question"]
     search_fields = ["content", "discussion"]
+
+
+@admin.register(Result)
+class ResultAdmin(admin.ModelAdmin):
+    list_display = ["user", "section", "correct", "total", "created", "modified"]
+    list_filter = ["user", "section"]
