@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
+from rest_framework.fields import BooleanField
 
 from cbed.main.models import Level, Section, Question, Answer, Result
 
@@ -16,11 +17,12 @@ class ResultSerializer(serializers.ModelSerializer):
 class LevelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Level
-        fields = "__all__"
+        fields = ["id", "name", "order"]
 
 
 class SectionSerializer(serializers.ModelSerializer):
     last_result = serializers.SerializerMethodField()
+    is_available = serializers.SerializerMethodField()
 
     @swagger_serializer_method(ResultSerializer)
     def get_last_result(self, section: Section):
@@ -28,9 +30,28 @@ class SectionSerializer(serializers.ModelSerializer):
         last_result = section.result_set.filter(user=current_user).first()
         return ResultSerializer(instance=last_result).data
 
+    @swagger_serializer_method(BooleanField)
+    def get_is_available(self, section: Section):
+        current_user = self.context["request"].user
+        return section.is_free or section in current_user.available_sections.all()
+
     class Meta:
         model = Section
-        fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "last_result",
+            "is_available",
+            "order",
+        ]
+
+
+class SectionSearchSerializer(SectionSerializer):
+    level_name = serializers.CharField(source="level.name")
+
+    class Meta:
+        model = Section
+        fields = ["id", "name", "order", "level_name", "is_available"]
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -52,14 +73,22 @@ class QuestionDetailSerializer(QuestionSerializer):
 class SectionDetailSerializer(SectionSerializer):
     questions = QuestionDetailSerializer(many=True, read_only=True)
 
-
-class SectionSearchSerializer(serializers.ModelSerializer):
-    level_name = serializers.CharField(source='level.name')
-
     class Meta:
         model = Section
-        fields = ["id", "name", "level_name"]
+        fields = [
+            "id",
+            "name",
+            "last_result",
+            "is_available",
+            "youtube_urls",
+            "pdf_urls",
+            "questions",
+        ]
 
 
 class LevelDetailSerializer(LevelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Level
+        fields = ["id", "name", "sections"]
