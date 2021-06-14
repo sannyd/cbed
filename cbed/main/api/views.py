@@ -1,10 +1,10 @@
-from rest_framework import mixins
-from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
+from rest_framework.filters import SearchFilter
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from cbed.main.api.serializers import (
     LevelSerializer,
     LevelDetailSerializer,
-    SectionDetailSerializer,
+    SectionDetailSerializer, SectionSearchSerializer,
 )
 from cbed.main.models import Level, Section
 
@@ -19,6 +19,13 @@ class LevelViewSet(ReadOnlyModelViewSet):
         return super().get_serializer_class()
 
 
-class SectionViewSet(mixins.RetrieveModelMixin, GenericViewSet):
-    queryset = Section.objects.all()
-    serializer_class = SectionDetailSerializer
+class SectionViewSet(ReadOnlyModelViewSet):
+    queryset = Section.objects.all().select_related("level")
+    serializer_class = SectionSearchSerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('name', "level__name")
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return SectionDetailSerializer
+        return super().get_serializer_class()

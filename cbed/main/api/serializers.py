@@ -38,5 +38,13 @@ class SectionDetailSerializer(SectionSerializer):
     questions = QuestionDetailSerializer(many=True, read_only=True)
 
 
+class SectionSearchSerializer(serializers.ModelSerializer):
+    level_name = serializers.CharField(source='level.name')
+
+    class Meta:
+        model = Section
+        fields = ["id", "name", "level_name"]
+
+
 class LevelDetailSerializer(LevelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
