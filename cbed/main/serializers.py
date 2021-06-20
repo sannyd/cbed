@@ -15,9 +15,19 @@ class ResultSerializer(serializers.ModelSerializer):
 
 
 class LevelSerializer(serializers.ModelSerializer):
+    is_available = serializers.SerializerMethodField()
+
     class Meta:
         model = Level
-        fields = ["id", "name", "order"]
+        fields = ["id", "name", "order", "is_available"]
+
+    @swagger_serializer_method(BooleanField)
+    def get_is_available(self, level: Level):
+        current_user = self.context["request"].user
+        for section in level.sections:
+            if section.is_free or section in current_user.available_sections.all():
+                return True
+        return False
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -91,4 +101,4 @@ class LevelDetailSerializer(LevelSerializer):
 
     class Meta:
         model = Level
-        fields = ["id", "name", "sections"]
+        fields = ["id", "name", "sections", "is_available"]
