@@ -24,7 +24,7 @@ class LevelSerializer(serializers.ModelSerializer):
     @swagger_serializer_method(BooleanField)
     def get_is_available(self, level: Level):
         current_user = self.context["request"].user
-        for section in level.sections:
+        for section in level.sections.all():
             if section.is_free or section in current_user.available_sections.all():
                 return True
         return False
