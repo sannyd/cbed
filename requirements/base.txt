@@ -30,3 +30,5 @@ djangorestframework-simplejwt==4.7.1
 facebook-sdk==3.1.0
 django-admin-sortable2==1.0
 django-better-admin-arrayfield==1.4.2
+
+pandas==1.2.5
