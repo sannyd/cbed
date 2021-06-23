@@ -55,7 +55,6 @@ class AnswerAdmin(SortableAdminMixin, admin.ModelAdmin):
         "created",
         "modified",
     ]
-    list_filter = ["question"]
     search_fields = ["content", "discussion"]
 
 

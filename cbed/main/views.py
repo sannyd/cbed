@@ -50,10 +50,10 @@ class SectionViewSet(ReadOnlyModelViewSet):
 
             user.available_sections.add(section)
             if result.grade >= 90:
-                for level in Level.objects.filter(order__gte=section.level.order):
+                for level in Level.objects.filter(order__gte=section.level.order).order_by("order"):
                     for __section in Section.objects.filter(
                         level=level, order__gt=section.order
-                    ):
+                    ).order_by("order"):
                         user.available_sections.add(__section)
                         break
                     else:
