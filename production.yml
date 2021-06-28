@@ -18,6 +18,8 @@ services:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
     command: /start
+    volumes:
+      - ../upload:/app/cbed/media/
 
   postgres:
     build:

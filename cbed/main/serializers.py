@@ -52,6 +52,7 @@ class SectionSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "subtitle",
+            "image",
             "last_result",
             "is_available",
             "order",
@@ -63,7 +64,15 @@ class SectionSearchSerializer(SectionSerializer):
 
     class Meta:
         model = Section
-        fields = ["id", "name", "subtitle", "order", "level_name", "is_available"]
+        fields = [
+            "id",
+            "name",
+            "subtitle",
+            "image",
+            "order",
+            "level_name",
+            "is_available",
+        ]
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -91,6 +100,7 @@ class SectionDetailSerializer(SectionSerializer):
             "id",
             "name",
             "subtitle",
+            "image",
             "last_result",
             "is_available",
             "youtube_urls",

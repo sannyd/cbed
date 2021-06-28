@@ -8,7 +8,7 @@ from model_utils.models import TimeStampedModel
 
 class Level(TimeStampedModel):
     name = models.CharField(max_length=255)
-    subtitle = models.TextField(default="")
+    subtitle = models.TextField(default="", blank=True)
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
@@ -21,7 +21,8 @@ class Level(TimeStampedModel):
 
 class Section(TimeStampedModel):
     name = models.CharField(max_length=255)
-    subtitle = models.TextField(default="")
+    subtitle = models.TextField(default="", blank=True)
+    image = models.ImageField(default="")
     youtube_urls = ArrayField(
         models.URLField(max_length=1000, blank=True), default=list, blank=True
     )
