@@ -1,8 +1,9 @@
 from django.http import JsonResponse
+from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
 from cbed.main.models import Level, Section, Result
 from cbed.main.serializers import (
@@ -15,14 +16,10 @@ from cbed.main.serializers import (
 from cbed.users.models import User
 
 
-class LevelViewSet(ReadOnlyModelViewSet):
+class LevelViewSet(mixins.ListModelMixin,
+                   GenericViewSet):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
-
-    def get_serializer_class(self):
-        if self.action == "retrieve":
-            return LevelDetailSerializer
-        return super().get_serializer_class()
 
 
 class SectionViewSet(ReadOnlyModelViewSet):
@@ -52,7 +49,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
             if result.grade >= 90:
                 for level in Level.objects.filter(order__gte=section.level.order).order_by("order"):
                     for __section in Section.objects.filter(
-                        level=level, order__gt=section.order
+                            level=level, order__gt=section.order
                     ).order_by("order"):
                         user.available_sections.add(__section)
                         break

@@ -19,7 +19,7 @@ class LevelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Level
-        fields = ["id", "name", "order", "is_available"]
+        fields = ["id", "name", "subtitle", "order", "is_available"]
 
     @swagger_serializer_method(BooleanField)
     def get_is_available(self, level: Level):
@@ -51,6 +51,7 @@ class SectionSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "subtitle",
             "last_result",
             "is_available",
             "order",
@@ -62,7 +63,7 @@ class SectionSearchSerializer(SectionSerializer):
 
     class Meta:
         model = Section
-        fields = ["id", "name", "order", "level_name", "is_available"]
+        fields = ["id", "name", "subtitle", "order", "level_name", "is_available"]
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -89,6 +90,7 @@ class SectionDetailSerializer(SectionSerializer):
         fields = [
             "id",
             "name",
+            "subtitle",
             "last_result",
             "is_available",
             "youtube_urls",
@@ -102,4 +104,4 @@ class LevelDetailSerializer(LevelSerializer):
 
     class Meta:
         model = Level
-        fields = ["id", "name", "sections", "is_available"]
+        fields = ["id", "name", "subtitle", "sections", "is_available"]
