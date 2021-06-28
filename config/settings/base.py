@@ -75,7 +75,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
     "adminsortable2",
     "django_extensions",
-    "django_better_admin_arrayfield"
+    "django_better_admin_arrayfield",
 ]
 
 LOCAL_APPS = [
@@ -305,6 +305,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "PAGE_SIZE": 20,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
