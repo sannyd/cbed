@@ -19,7 +19,7 @@ services:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - "8000:8000"
+      - "8005:8000"
     command: /start
 
   postgres:
@@ -33,8 +33,7 @@ services:
       - ./local_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
-    ports:
-      - 5432:5432
+
 #
 #  redis:
 #    image: redis:5.0
