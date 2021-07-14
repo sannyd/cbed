@@ -13,7 +13,7 @@ from django.contrib.sites.models import Site
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import Serializer, ModelSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from cbed.authentication.sso_service import SSOService
@@ -34,23 +34,31 @@ class AppSerializer(Serializer):
         pass
 
 
-class RegisterSerializer(AppSerializer):
+class RegisterSerializer(ModelSerializer):
     email = serializers.EmailField()
+    name = serializers.CharField()
+    state = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
-    def create(self, validated_data):
-        email = validated_data["email"].lower()
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError(
-                {"email": "This email has been registered"}
-            )
-        password = validated_data["password"]
+    class Meta:
+        model = User
+        fields = ["email", "password", "name", "state", "avatar"]
 
-        return User.objects.create(
-            username=email,
-            email=email,
-            password=make_password(password),
-        )
+    def validate_email(self, email):
+        email = email.lower().strip()
+        if email:
+            if User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    {"email": "This email has been registered"}
+                )
+        return email
+
+    def create(self, validated_data):
+        password = validated_data["password"]
+        validated_data["password"] = make_password(password)
+        validated_data["username"] = validated_data["email"]
+
+        return User.objects.create(**validated_data)
 
 
 class SignInSerializer(AppSerializer):
