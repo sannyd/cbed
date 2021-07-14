@@ -1,7 +1,6 @@
-from uuid import uuid4
-
-from allauth.account.adapter import get_adapter
 from allauth.account import app_settings
+from allauth.account.adapter import get_adapter
+from allauth.account.forms import EmailAwarePasswordResetTokenGenerator
 from allauth.account.utils import (
     filter_users_by_email,
     user_pk_to_url_str,
@@ -10,7 +9,6 @@ from allauth.account.utils import (
 from allauth.utils import build_absolute_uri
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from rest_framework import serializers
@@ -125,7 +123,7 @@ class ResetPasswordSerializer(AppSerializer):
         email = self.validated_data["email"]
         for user in self.users:
 
-            temp_key = default_token_generator.make_token(user)
+            temp_key = EmailAwarePasswordResetTokenGenerator().make_token(user)
             path = reverse(
                 "account_reset_password_from_key",
                 kwargs=dict(uidb36=user_pk_to_url_str(user), key=temp_key),
