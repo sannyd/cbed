@@ -8,6 +8,7 @@ from .serializers import (
     SignInSerializer,
     RegisterSerializer,
     SSOSerializer,
+    ResetPasswordSerializer,
 )
 
 
@@ -23,6 +24,11 @@ class SSOView(CreateAPIView):
 
 class RegisterView(CreateAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
+
+
+class ResetPasswordView(CreateAPIView):
+    serializer_class = ResetPasswordSerializer
     permission_classes = [AllowAny]
 
 

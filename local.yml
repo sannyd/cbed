@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     image: cbed_local_django
-    container_name: django
+    container_name: cbed_django
     depends_on:
       - postgres
     volumes:
@@ -27,13 +27,14 @@ services:
       context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: cbed_production_postgres
-    container_name: postgres
+    container_name: cbed_postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z
       - ./local_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
-
+    ports:
+      - "5432:5432"
 #
 #  redis:
 #    image: redis:5.0
