@@ -3,6 +3,8 @@ from django.db.models import CharField, DateTimeField, ManyToManyField, ImageFie
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from cbed.main.enums import MemberPlan
+
 
 class User(AbstractUser):
     """Default user for CBED."""
@@ -11,6 +13,7 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     avatar = ImageField(null=True, blank=True)
     state = CharField(max_length=64, default="")
+    member_plan = CharField(max_length=10, choices=MemberPlan.choices, default=MemberPlan.FREE)
     membership = DateTimeField(default=timezone.now)
     available_sections = ManyToManyField("main.Section")
     first_name = None  # type: ignore

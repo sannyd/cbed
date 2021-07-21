@@ -1,14 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
-from django_better_admin_arrayfield.models.fields import ArrayField
 from django.db import models
-
+from django_better_admin_arrayfield.models.fields import ArrayField
 from model_utils.models import TimeStampedModel
+
+from cbed.main.enums import MemberPlan
 
 
 class Level(TimeStampedModel):
     name = models.CharField(max_length=255)
     subtitle = models.TextField(default="", blank=True)
+    member_plan = models.CharField(max_length=10, choices=MemberPlan.choices, default=MemberPlan.FREE)
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 

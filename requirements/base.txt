@@ -32,3 +32,4 @@ django-admin-sortable2==1.0
 django-better-admin-arrayfield==1.4.2
 
 pandas==1.2.5
+inapppy

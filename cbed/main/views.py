@@ -20,6 +20,8 @@ class LevelViewSet(mixins.ListModelMixin,
                    GenericViewSet):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ["member_plan"]
 
 
 class SectionViewSet(ReadOnlyModelViewSet):

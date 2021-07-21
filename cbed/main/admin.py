@@ -13,7 +13,8 @@ class SectionInline(SortableInlineAdminMixin, admin.TabularInline):
 
 @admin.register(Level)
 class LevelAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ["name", "created", "modified"]
+    list_display = ["name", "member_plan", "created", "modified"]
+    list_filter = ["member_plan"]
     inlines = [SectionInline]
 
 
