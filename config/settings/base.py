@@ -82,6 +82,7 @@ LOCAL_APPS = [
     "cbed.users.apps.UsersConfig",
     "cbed.authentication",
     "cbed.main",
+    "cbed.transactions",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -318,3 +319,6 @@ SWAGGER_SETTINGS = {
         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
     },
 }
+
+BUNDLE_ID = "com.barexamdrills.appx"
+AUTO_RETRY_WRONG_ENV_REQUEST = True

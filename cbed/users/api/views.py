@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .serializers import UserInfoSerializer, UserUpdateInfoSerializer
+from .serializers import UserInfoSerializer, UserUpdateInfoSerializer, ReceiptSerializer
 
 User = get_user_model()
 
@@ -29,3 +30,7 @@ class UserViewSet(GenericViewSet):
                 status=status.HTTP_200_OK, data=UserInfoSerializer(request.user).data
             )
         return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+
+
+class PurchaseView(CreateAPIView):
+    serializer_class = ReceiptSerializer

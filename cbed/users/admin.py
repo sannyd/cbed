@@ -28,7 +28,15 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-        (_("Important dates"), {"fields": ("available_sections",)})
+        (_("Important dates"), {"fields": ("available_sections",)}),
     )
-    list_display = ["username", "is_active", "membership", "is_superuser"]
+    list_display = [
+        "username",
+        "is_active",
+        "member_plan",
+        "membership",
+        "is_superuser",
+    ]
+    list_filter = ["is_staff", "member_plan", "is_superuser", "is_active", "groups"]
+
     search_fields = ["name"]
