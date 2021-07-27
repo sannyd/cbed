@@ -76,7 +76,7 @@ class ReceiptSerializer(serializers.Serializer):
                 user.membership = membership
                 user.save()
 
-                return f"Buy successful {user.member_plan} to {user.member_plan}"
+                return f"Buy successful {user.get_member_plan_display()} to {user.membership.date()}"
             raise ValidationError("No purchase found")
         except InAppPyValidationError as e:
             raise ValidationError(e)
