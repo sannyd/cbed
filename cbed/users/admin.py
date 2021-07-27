@@ -13,7 +13,7 @@ class UserAdmin(auth_admin.UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
+        (None, {"fields": ("username", "password", "member_plan")}),
         (_("Personal info"), {"fields": ("name", "email")}),
         (
             _("Permissions"),
@@ -35,7 +35,7 @@ class UserAdmin(auth_admin.UserAdmin):
         "is_active",
         "member_plan",
         "membership",
-        "is_superuser",
+        "last_login",
     ]
     list_filter = ["is_staff", "member_plan", "is_superuser", "is_active", "groups"]
 

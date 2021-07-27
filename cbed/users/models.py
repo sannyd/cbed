@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, DateTimeField, ManyToManyField, ImageField
+from django.db.models import CharField, DateTimeField, ManyToManyField, ImageField, Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -11,7 +11,11 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     avatar = ImageField(null=True, blank=True)
     state = CharField(max_length=64, default="")
-    member_plan = CharField(max_length=128, choices=MemberPlanChoices.choices, default=MemberPlanChoices.FREE)
+    member_plan = CharField(
+        max_length=128,
+        choices=MemberPlanChoices.choices,
+        default=MemberPlanChoices.FREE,
+    )
     membership = DateTimeField(default=timezone.now)
     available_sections = ManyToManyField("main.Section")
     first_name = None  # type: ignore
@@ -19,8 +23,30 @@ class User(AbstractUser):
 
     @property
     def member_plan_simple(self):
-        if self.member_plan in [MemberPlanChoices.BABY_BAR_OCT, MemberPlanChoices.BABY_BAR_JUNE]:
+        if self.member_plan in [
+            MemberPlanChoices.BABY_BAR_OCT,
+            MemberPlanChoices.BABY_BAR_JUNE,
+        ]:
             return MemberPlanSimple.BABY
-        elif self.member_plan in [MemberPlanChoices.PRO_BAR_JULY, MemberPlanChoices.PRO_BAR_FEB]:
+        elif self.member_plan in [
+            MemberPlanChoices.PRO_BAR_JULY,
+            MemberPlanChoices.PRO_BAR_FEB,
+        ]:
             return MemberPlanSimple.PRO
         return MemberPlanSimple.FREE
+
+    @property
+    def points(self):
+        return self.results.aggregate(Sum("correct"))["correct__sum"] or 0
+
+    @property
+    def last_section(self):
+        return self.results.order_by("-created").first()
+
+    @property
+    def last_section_name(self):
+        return self.last_section.section.name
+
+    @points.setter
+    def points(self, value):
+        pass

@@ -1,8 +1,10 @@
+from django.db.models import Sum
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
@@ -12,12 +14,14 @@ from cbed.main.serializers import (
     SectionDetailSerializer,
     SectionSearchSerializer,
     ResultSerializer,
+    HighScoreResultSerializer,
+    HighScoreUserDetail,
 )
+from cbed.transactions.enums import MemberPlanChoices
 from cbed.users.models import User
 
 
-class LevelViewSet(mixins.ListModelMixin,
-                   GenericViewSet):
+class LevelViewSet(mixins.ListModelMixin, GenericViewSet):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
     filter_backends = (DjangoFilterBackend,)
@@ -54,7 +58,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     order__gte=section.level.order
                 ).order_by("order"):
                     for __section in Section.objects.filter(
-                            level=level, order__gt=section.order
+                        level=level, order__gt=section.order
                     ).order_by("order"):
                         user.available_sections.add(__section)
                         break
@@ -64,3 +68,38 @@ class SectionViewSet(ReadOnlyModelViewSet):
             return JsonResponse(serializer.validated_data)
         else:
             return JsonResponse(serializer.errors)
+
+
+class ScoreBoardView(RetrieveAPIView):
+    queryset = User.objects.annotate(points=Sum("results__correct")).order_by("-points")
+    serializer_class = HighScoreResultSerializer
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse(
+            {
+                "baby_bar_june": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.BABY_BAR_JUNE
+                    )[:4],
+                    many=True,
+                ).data,
+                "baby_bar_oct": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.BABY_BAR_OCT
+                    )[:4],
+                    many=True,
+                ).data,
+                "pro_bar_feb": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.PRO_BAR_FEB
+                    )[:4],
+                    many=True,
+                ).data,
+                "pro_bar_july": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.PRO_BAR_JULY
+                    )[:4],
+                    many=True,
+                ).data,
+            }
+        )

@@ -115,3 +115,22 @@ class LevelDetailSerializer(LevelSerializer):
     class Meta:
         model = Level
         fields = ["id", "name", "subtitle", "sections", "is_available"]
+
+
+class HighScoreUserDetail(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "name", "avatar", "points", "last_section_name"]
+
+
+class HighScoreResultSerializer(serializers.Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    baby_bar_june = HighScoreUserDetail(many=True)
+    baby_bar_oct = HighScoreUserDetail(many=True)
+    pro_bar_feb = HighScoreUserDetail(many=True)
+    pro_bar_july = HighScoreUserDetail(many=True)

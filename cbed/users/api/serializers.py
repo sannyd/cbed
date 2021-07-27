@@ -16,7 +16,17 @@ User = get_user_model()
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "avatar", "name", "state", "member_plan", "member_plan_simple", "membership"]
+        fields = [
+            "email",
+            "avatar",
+            "name",
+            "state",
+            "member_plan",
+            "member_plan_simple",
+            "membership",
+            "last_section_name",
+            "points",
+        ]
 
 
 class UserUpdateInfoSerializer(serializers.ModelSerializer):

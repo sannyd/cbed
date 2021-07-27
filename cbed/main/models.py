@@ -10,7 +10,9 @@ from cbed.main.enums import MemberPlanSimple
 class Level(TimeStampedModel):
     name = models.CharField(max_length=255)
     subtitle = models.TextField(default="", blank=True)
-    member_plan = models.CharField(max_length=10, choices=MemberPlanSimple.choices, default=MemberPlanSimple.FREE)
+    member_plan = models.CharField(
+        max_length=10, choices=MemberPlanSimple.choices, default=MemberPlanSimple.FREE
+    )
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
@@ -71,7 +73,9 @@ class Answer(TimeStampedModel):
 
 
 class Result(TimeStampedModel):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="results"
+    )
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     correct = models.IntegerField(default=0)
     total = models.IntegerField(default=1, validators=[MinValueValidator(1)])
