@@ -25,16 +25,21 @@ class LevelViewSet(mixins.ListModelMixin, GenericViewSet):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ["member_plan"]
+
+    def get_queryset(self):
+        return self.queryset.filter(member_plan__lte=self.request.user.member_plan_simple)
 
 
 class SectionViewSet(ReadOnlyModelViewSet):
-    queryset = Section.objects.all().order_by("id").select_related("level")
+    queryset = Section.objects.all().order_by("order").select_related("level")
     serializer_class = SectionSearchSerializer
     filter_backends = (SearchFilter, DjangoFilterBackend)
     filter_fields = ["level"]
     search_fields = ("name", "level__name")
     pagination_class = LimitOffsetPagination
+
+    def get_queryset(self):
+        return self.queryset.filter(member_plan__lte=self.request.user.member_plan_simple)
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -55,10 +60,10 @@ class SectionViewSet(ReadOnlyModelViewSet):
             user.available_sections.add(section)
             if result.grade >= 90:
                 for level in Level.objects.filter(
-                    order__gte=section.level.order
+                        order__gte=section.level.order
                 ).order_by("order"):
                     for __section in Section.objects.filter(
-                        level=level, order__gt=section.order
+                            level=level, order__gt=section.order
                     ).order_by("order"):
                         user.available_sections.add(__section)
                         break

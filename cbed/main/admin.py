@@ -25,8 +25,9 @@ class QuestionInline(SortableInlineAdminMixin, admin.TabularInline):
 
 @admin.register(Section)
 class SectionAdmin(SortableAdminMixin, admin.ModelAdmin, DynamicArrayMixin):
-    list_display = ["name", "level", "created", "modified"]
-    list_filter = ["level"]
+    list_display = ["name", "member_plan", "level", "created", "modified"]
+    list_filter = ["member_plan", "level"]
+    search_fields = ["name"]
     inlines = [QuestionInline]
 
 

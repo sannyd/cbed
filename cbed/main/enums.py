@@ -1,7 +1,7 @@
-from django.db.models import TextChoices
+from django.db.models import IntegerChoices
 
 
-class MemberPlanSimple(TextChoices):
-    FREE = "free", "Free Bar"
-    BABY = "baby", "Baby Bar"
-    PRO = "pro", "Pro Bar"
+class MemberPlanSimple(IntegerChoices):
+    FREE = 0, "Free Bar"
+    BABY = 100, "Baby Bar"
+    PRO = 200, "Pro Bar"
