@@ -19,9 +19,13 @@ prod-migrate:
 
 prod-up:
 	docker-compose -f production.yml up -d --build
+	docker-compose -f production.yml run --rm django python manage.py migrate
 
 prod-down:
 	docker-compose -f production.yml down
 
 prod-shell:
 	docker-compose -f production.yml run --rm  django python manage.py shell_plus
+
+prod-backup:
+	docker-compose -f production.yml run --rm postgres backup
