@@ -13,7 +13,18 @@ class UserAdmin(auth_admin.UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     fieldsets = (
-        (None, {"fields": ("username", "password", "member_plan")}),
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "password",
+                    "member_plan",
+                    "current_mbe_section",
+                    "is_unlock_essay_pt",
+                )
+            },
+        ),
         (_("Personal info"), {"fields": ("name", "email")}),
         (
             _("Permissions"),
@@ -28,7 +39,6 @@ class UserAdmin(auth_admin.UserAdmin):
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-        (_("Important dates"), {"fields": ("available_sections",)}),
     )
     list_display = [
         "username",

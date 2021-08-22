@@ -6,13 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0006_user_member_plan'),
+        ("users", "0006_user_member_plan"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='member_plan',
-            field=models.CharField(choices=[('com.barexamdrills.app.babybarjune', 'Baby Bar June'), ('com.barexamdrills.app.babybaroct', 'Baby Bar Oct'), ('com.barexamdrills.app.probarfeb', 'Pro Bar Feb'), ('com.barexamdrills.app.probarjuly', 'Pro Bar July'), ('com.barexamdrills.app.unlockall', 'Test'), ('free', 'Free')], default='free', max_length=128),
+            model_name="user",
+            name="member_plan",
+            field=models.CharField(
+                choices=[
+                    ("com.barexamdrills.app.babybarjune", "Baby Bar June"),
+                    ("com.barexamdrills.app.babybaroct", "Baby Bar Oct"),
+                    ("com.barexamdrills.app.probarfeb", "Pro Bar Feb"),
+                    ("com.barexamdrills.app.probarjuly", "Pro Bar July"),
+                    ("com.barexamdrills.app.unlockall", "Test"),
+                    ("free", "Free"),
+                ],
+                default="free",
+                max_length=128,
+            ),
         ),
     ]

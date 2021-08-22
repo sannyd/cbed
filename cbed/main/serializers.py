@@ -4,8 +4,7 @@ from rest_framework import serializers
 from rest_framework.fields import BooleanField
 
 from cbed.main.models import Answer, Level, Question, Result, Section
-
-User = get_user_model()
+from cbed.users.models import User
 
 
 class ResultSerializer(serializers.ModelSerializer):
@@ -15,20 +14,9 @@ class ResultSerializer(serializers.ModelSerializer):
 
 
 class LevelSerializer(serializers.ModelSerializer):
-    is_available = serializers.SerializerMethodField()
-
     class Meta:
         model = Level
-        fields = ["id", "name", "subtitle", "order", "is_available"]
-
-    @swagger_serializer_method(BooleanField)
-    def get_is_available(self, level: Level):
-        current_user = self.context["request"].user
-        available_sections_all = current_user.available_sections.all()
-        for section in level.sections.all():
-            if section.is_free or section in available_sections_all:
-                return True
-        return False
+        fields = ["id", "name", "subtitle", "order"]
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -43,8 +31,17 @@ class SectionSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(BooleanField)
     def get_is_available(self, section: Section):
-        current_user = self.context["request"].user
-        return section.is_free or section in current_user.available_sections.all()
+        if section.name == "Torts - Level 1" or "Free" in section.level.name:
+            return True
+
+        current_user: User = self.context["request"].user
+
+        if section.level.name == "MBE":
+            return (
+                current_user.current_mbe_section
+                and section.order <= current_user.current_mbe_section.order
+            )
+        return current_user.is_unlock_essay_pt
 
     class Meta:
         model = Section

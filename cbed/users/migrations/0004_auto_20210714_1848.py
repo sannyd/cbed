@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0003_user_available_sections'),
+        ("users", "0003_user_available_sections"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='avatar',
-            field=models.FileField(blank=True, null=True, upload_to=''),
+            model_name="user",
+            name="avatar",
+            field=models.FileField(blank=True, null=True, upload_to=""),
         ),
         migrations.AddField(
-            model_name='user',
-            name='state',
-            field=models.CharField(default='', max_length=64),
+            model_name="user",
+            name="state",
+            field=models.CharField(default="", max_length=64),
         ),
     ]

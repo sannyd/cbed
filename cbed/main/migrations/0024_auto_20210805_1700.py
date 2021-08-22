@@ -6,23 +6,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0023_auto_20210805_1640'),
+        ("main", "0023_auto_20210805_1640"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='level',
-            name='member_plan',
-            field=models.IntegerField(choices=[(0, 'Free Bar'), (100, 'Baby Bar'), (200, 'Pro Bar')], default=0),
+            model_name="level",
+            name="member_plan",
+            field=models.IntegerField(
+                choices=[(0, "Free Bar"), (100, "Baby Bar"), (200, "Pro Bar")],
+                default=0,
+            ),
         ),
         migrations.AlterField(
-            model_name='section',
-            name='image',
-            field=models.ImageField(blank=True, default='', upload_to=''),
+            model_name="section",
+            name="image",
+            field=models.ImageField(blank=True, default="", upload_to=""),
         ),
         migrations.AlterField(
-            model_name='section',
-            name='member_plan',
-            field=models.IntegerField(choices=[(0, 'Free Bar'), (100, 'Baby Bar'), (200, 'Pro Bar')], default=0),
+            model_name="section",
+            name="member_plan",
+            field=models.IntegerField(
+                choices=[(0, "Free Bar"), (100, "Baby Bar"), (200, "Pro Bar")],
+                default=0,
+            ),
         ),
     ]

@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0018_question_youtube_url'),
+        ("main", "0018_question_youtube_url"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='level',
-            name='member_plan',
-            field=models.TextField(choices=[('free', 'Free Bar'), ('baby', 'Baby Bar'), ('pro', 'Pro Bar')], default='free', max_length=10),
+            model_name="level",
+            name="member_plan",
+            field=models.TextField(
+                choices=[
+                    ("free", "Free Bar"),
+                    ("baby", "Baby Bar"),
+                    ("pro", "Pro Bar"),
+                ],
+                default="free",
+                max_length=10,
+            ),
         ),
     ]

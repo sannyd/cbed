@@ -1,5 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, DateTimeField, ImageField, ManyToManyField, Sum
+from django.db.models import (
+    SET_NULL,
+    BooleanField,
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    ImageField,
+    Sum,
+)
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -17,7 +25,14 @@ class User(AbstractUser):
         default=MemberPlanChoices.FREE,
     )
     membership = DateTimeField(default=timezone.now)
-    available_sections = ManyToManyField("main.Section", blank=True)
+    current_mbe_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": "MBE"},
+    )
+    is_unlock_essay_pt = BooleanField(default=False)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
 

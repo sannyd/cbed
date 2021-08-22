@@ -61,19 +61,46 @@ class SectionViewSet(ReadOnlyModelViewSet):
             result.total = serializer.validated_data["total"]
             result.save()
 
-            user.available_sections.add(section)
-            if result.grade >= 90:
-                for level in Level.objects.filter(
-                    order__gte=section.level.order
-                ).order_by("order"):
-                    for __section in Section.objects.filter(
-                        level=level, order__gt=section.order
-                    ).order_by("order"):
-                        user.available_sections.add(__section)
-                        break
-                    else:
-                        continue
-                    break
+            mbe_level = Level.objects.filter(name="MBE").first()
+
+            if mbe_level and mbe_level == section.level:
+
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=mbe_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if (
+                        next_section
+                        and user.current_mbe_section.order < next_section.order
+                    ):
+                        user.current_mbe_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=mbe_level,
+                            order__lte=section.order,
+                            name__contains="Torts",
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    user.current_mbe_section = start_level_section
+                    user.save()
+
+                section_tort_level_4 = Section.objects.filter(
+                    name="Torts - Level 4", level__name="MBE"
+                ).first()
+                if (
+                    section_tort_level_4
+                    and user.current_mbe_section.order >= section_tort_level_4.order
+                ):
+                    user.is_unlock_essay_pt = True
+                    user.save()
             return JsonResponse(serializer.validated_data)
         else:
             return JsonResponse(serializer.errors)

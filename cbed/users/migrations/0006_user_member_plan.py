@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0005_auto_20210714_1911'),
+        ("users", "0005_auto_20210714_1911"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='member_plan',
-            field=models.CharField(choices=[('free', 'Free Bar'), ('baby', 'Baby Bar'), ('pro', 'Pro Bar')], default='free', max_length=10),
+            model_name="user",
+            name="member_plan",
+            field=models.CharField(
+                choices=[
+                    ("free", "Free Bar"),
+                    ("baby", "Baby Bar"),
+                    ("pro", "Pro Bar"),
+                ],
+                default="free",
+                max_length=10,
+            ),
         ),
     ]

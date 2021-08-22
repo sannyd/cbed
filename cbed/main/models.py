@@ -8,7 +8,7 @@ from cbed.main.enums import MemberPlanSimple
 
 
 class Level(TimeStampedModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     subtitle = models.TextField(default="", blank=True)
     member_plan = models.IntegerField(
         choices=MemberPlanSimple.choices, default=MemberPlanSimple.FREE
@@ -37,7 +37,6 @@ class Section(TimeStampedModel):
         models.URLField(max_length=1000, blank=True), default=list, blank=True
     )
     level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name="sections")
-    is_free = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
     class Meta(object):
