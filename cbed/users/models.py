@@ -17,7 +17,7 @@ class User(AbstractUser):
         default=MemberPlanChoices.FREE,
     )
     membership = DateTimeField(default=timezone.now)
-    available_sections = ManyToManyField("main.Section")
+    available_sections = ManyToManyField("main.Section", blank=True)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
 
