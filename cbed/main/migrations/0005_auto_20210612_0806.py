@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0004_auto_20210612_0753'),
+        ("main", "0004_auto_20210612_0753"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='section',
-            name='pdf_url',
+            model_name="section",
+            name="pdf_url",
             field=models.CharField(blank=True, max_length=1000),
         ),
         migrations.AlterField(
-            model_name='section',
-            name='youtube_url',
+            model_name="section",
+            name="youtube_url",
             field=models.CharField(blank=True, max_length=1000),
         ),
     ]

@@ -7,26 +7,34 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0006_auto_20210613_0608'),
+        ("main", "0006_auto_20210613_0608"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='section',
-            name='pdf_url',
+            model_name="section",
+            name="pdf_url",
         ),
         migrations.RemoveField(
-            model_name='section',
-            name='youtube_url',
+            model_name="section",
+            name="youtube_url",
         ),
         migrations.AddField(
-            model_name='section',
-            name='pdf_urls',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=1000), default=[], size=None),
+            model_name="section",
+            name="pdf_urls",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(blank=True, max_length=1000),
+                default=[],
+                size=None,
+            ),
         ),
         migrations.AddField(
-            model_name='section',
-            name='youtube_urls',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=1000), default=[], size=None),
+            model_name="section",
+            name="youtube_urls",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(blank=True, max_length=1000),
+                default=[],
+                size=None,
+            ),
         ),
     ]

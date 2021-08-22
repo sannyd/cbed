@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0012_result'),
+        ("main", "0012_result"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='section',
-            name='is_free',
+            model_name="section",
+            name="is_free",
             field=models.BooleanField(default=False),
         ),
     ]

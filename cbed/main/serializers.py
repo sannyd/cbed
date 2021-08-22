@@ -3,7 +3,7 @@ from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 from rest_framework.fields import BooleanField
 
-from cbed.main.models import Level, Section, Question, Answer, Result
+from cbed.main.models import Answer, Level, Question, Result, Section
 
 User = get_user_model()
 

@@ -6,16 +6,16 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
-from cbed.main.models import Level, Section, Result
+from cbed.main.models import Level, Result, Section
 from cbed.main.serializers import (
-    LevelSerializer,
-    SectionDetailSerializer,
-    SectionSearchSerializer,
-    ResultSerializer,
     HighScoreResultSerializer,
     HighScoreUserDetail,
+    LevelSerializer,
+    ResultSerializer,
+    SectionDetailSerializer,
+    SectionSearchSerializer,
 )
 from cbed.transactions.enums import MemberPlanChoices
 from cbed.users.models import User
@@ -27,7 +27,9 @@ class LevelViewSet(mixins.ListModelMixin, GenericViewSet):
     filter_backends = (DjangoFilterBackend,)
 
     def get_queryset(self):
-        return self.queryset.filter(member_plan__lte=self.request.user.member_plan_simple)
+        return self.queryset.filter(
+            member_plan__lte=self.request.user.member_plan_simple
+        )
 
 
 class SectionViewSet(ReadOnlyModelViewSet):
@@ -39,7 +41,9 @@ class SectionViewSet(ReadOnlyModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        return self.queryset.filter(member_plan__lte=self.request.user.member_plan_simple)
+        return self.queryset.filter(
+            member_plan__lte=self.request.user.member_plan_simple
+        )
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -60,10 +64,10 @@ class SectionViewSet(ReadOnlyModelViewSet):
             user.available_sections.add(section)
             if result.grade >= 90:
                 for level in Level.objects.filter(
-                        order__gte=section.level.order
+                    order__gte=section.level.order
                 ).order_by("order"):
                     for __section in Section.objects.filter(
-                            level=level, order__gt=section.order
+                        level=level, order__gt=section.order
                     ).order_by("order"):
                         user.available_sections.add(__section)
                         break

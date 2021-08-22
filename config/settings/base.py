@@ -64,11 +64,11 @@ DJANGO_APPS = [
     "django.forms",
 ]
 THIRD_PARTY_APPS = [
-    "crispy_forms",
+    # "crispy_forms",
     "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "django_celery_beat",
+    # "allauth.account",
+    # "allauth.socialaccount",
+    # "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",

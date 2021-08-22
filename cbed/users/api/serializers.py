@@ -8,7 +8,7 @@ from inapppy import AppStoreValidator, InAppPyValidationError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from cbed.transactions.models import Transaction, MemberPlanChoices
+from cbed.transactions.models import MemberPlanChoices, Transaction
 
 User = get_user_model()
 

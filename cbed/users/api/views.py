@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .serializers import UserInfoSerializer, UserUpdateInfoSerializer, ReceiptSerializer
+from .serializers import ReceiptSerializer, UserInfoSerializer, UserUpdateInfoSerializer
 
 User = get_user_model()
 

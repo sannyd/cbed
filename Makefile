@@ -7,6 +7,10 @@ up:
 down:
 	docker-compose -f local.yml down
 
+format:
+	black .
+	isort . --profile black
+
 migrate:
 	docker-compose -f local.yml run --rm django python manage.py makemigrations
 	docker-compose -f local.yml run --rm django python manage.py migrate

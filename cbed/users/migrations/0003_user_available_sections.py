@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0013_section_is_free'),
-        ('users', '0002_user_membership'),
+        ("main", "0013_section_is_free"),
+        ("users", "0002_user_membership"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='available_sections',
-            field=models.ManyToManyField(to='main.Section'),
+            model_name="user",
+            name="available_sections",
+            field=models.ManyToManyField(to="main.Section"),
         ),
     ]

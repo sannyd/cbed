@@ -7,4 +7,6 @@ from cbed.transactions.models import Transaction
 @admin.register(Transaction)
 class TransactionAdmin(ModelAdmin):
     list_display = ["user", "product", "ref", "created"]
-    list_filter = ["product", ]
+    list_filter = [
+        "product",
+    ]

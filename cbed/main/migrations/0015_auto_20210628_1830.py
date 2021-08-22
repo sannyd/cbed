@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0014_auto_20210614_2240'),
+        ("main", "0014_auto_20210614_2240"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='level',
-            name='subtitle',
-            field=models.TextField(default=''),
+            model_name="level",
+            name="subtitle",
+            field=models.TextField(default=""),
         ),
         migrations.AddField(
-            model_name='section',
-            name='subtitle',
-            field=models.TextField(default=''),
+            model_name="section",
+            name="subtitle",
+            field=models.TextField(default=""),
         ),
     ]

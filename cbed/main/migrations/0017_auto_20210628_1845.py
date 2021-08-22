@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0016_section_image'),
+        ("main", "0016_section_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='level',
-            name='subtitle',
-            field=models.TextField(blank=True, default=''),
+            model_name="level",
+            name="subtitle",
+            field=models.TextField(blank=True, default=""),
         ),
         migrations.AlterField(
-            model_name='section',
-            name='subtitle',
-            field=models.TextField(blank=True, default=''),
+            model_name="section",
+            name="subtitle",
+            field=models.TextField(blank=True, default=""),
         ),
     ]

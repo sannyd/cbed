@@ -13,16 +13,16 @@ from django.contrib.sites.models import Site
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Serializer, ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from cbed.authentication.sso_service import SSOService
 from cbed.users.models import User
 from config.exception import (
-    WrongCredentialsException,
-    WrongAssociatedAccountException,
     SSOMissingEmailAddressException,
     UserIsDeactivatedException,
+    WrongAssociatedAccountException,
+    WrongCredentialsException,
 )
 
 

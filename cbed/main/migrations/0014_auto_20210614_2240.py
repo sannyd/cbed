@@ -7,13 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0013_section_is_free'),
+        ("main", "0013_section_is_free"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='result',
-            name='total',
-            field=models.IntegerField(default=1, validators=[django.core.validators.MinValueValidator(1)]),
+            model_name="result",
+            name="total",
+            field=models.IntegerField(
+                default=1, validators=[django.core.validators.MinValueValidator(1)]
+            ),
         ),
     ]

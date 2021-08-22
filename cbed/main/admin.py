@@ -2,7 +2,7 @@ from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 from django.contrib import admin
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
-from cbed.main.models import Level, Section, Question, Answer, Result
+from cbed.main.models import Answer, Level, Question, Result, Section
 
 
 class SectionInline(SortableInlineAdminMixin, admin.TabularInline):
