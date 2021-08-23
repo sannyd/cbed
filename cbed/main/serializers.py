@@ -35,12 +35,13 @@ class SectionSerializer(serializers.ModelSerializer):
             return True
 
         current_user: User = self.context["request"].user
-
         if section.level.name == "MBE":
-            return (
+            if (
                 current_user.current_mbe_section
                 and section.order <= current_user.current_mbe_section.order
-            )
+            ):
+                return True
+            return False
         return current_user.is_unlock_essay_pt
 
     class Meta:
