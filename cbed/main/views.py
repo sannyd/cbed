@@ -27,9 +27,11 @@ class LevelViewSet(mixins.ListModelMixin, GenericViewSet):
     filter_backends = (DjangoFilterBackend,)
 
     def get_queryset(self):
-        return self.queryset.filter(
-            member_plan__lte=self.request.user.member_plan_simple
-        )
+        if self.request.user.is_authenticated:
+            return self.queryset.filter(
+                member_plan__lte=self.request.user.member_plan_simple
+            )
+        return self.queryset
 
 
 class SectionViewSet(ReadOnlyModelViewSet):
@@ -41,9 +43,11 @@ class SectionViewSet(ReadOnlyModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-        return self.queryset.filter(
-            member_plan__lte=self.request.user.member_plan_simple
-        )
+        if self.request.user.is_authenticated:
+            return self.queryset.filter(
+                member_plan__lte=self.request.user.member_plan_simple
+            )
+        return self.queryset
 
     def get_serializer_class(self):
         if self.action == "retrieve":
