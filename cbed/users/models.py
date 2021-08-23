@@ -10,6 +10,7 @@ from django.db.models import (
 )
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from cbed.main.enums import MemberPlanSimple
 from cbed.transactions.enums import MemberPlanChoices
@@ -19,6 +20,7 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     avatar = ImageField(null=True, blank=True)
     state = CharField(max_length=64, default="")
+    phone_number = PhoneNumberField(default="")
     member_plan = CharField(
         max_length=128,
         choices=MemberPlanChoices.choices,

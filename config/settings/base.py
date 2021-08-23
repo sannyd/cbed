@@ -77,6 +77,7 @@ THIRD_PARTY_APPS = [
     "adminsortable2",
     "django_extensions",
     "django_better_admin_arrayfield",
+    "phonenumber_field",
 ]
 
 LOCAL_APPS = [

@@ -32,7 +32,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
 class UserUpdateInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["avatar", "name", "state"]
+        fields = [
+            "avatar",
+            "name",
+            "state",
+            "phone_number",
+        ]
 
 
 class ReceiptSerializer(serializers.Serializer):
