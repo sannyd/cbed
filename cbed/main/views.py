@@ -76,7 +76,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .order_by("order")
                         .first()
                     )
-                    if (
+                    if user.current_mbe_section is None or (
                         next_section
                         and user.current_mbe_section.order < next_section.order
                     ):
