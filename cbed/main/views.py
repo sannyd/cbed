@@ -87,8 +87,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     start_level_section = (
                         Section.objects.filter(
                             level=mbe_level,
-                            order__lte=section.order,
-                            name__contains="Torts",
+                            order__lt=section.order,
                         )
                         .order_by("-order")
                         .first()
@@ -101,6 +100,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                 ).first()
                 if (
                     section_tort_level_4
+                    and user.current_mbe_section
                     and user.current_mbe_section.order >= section_tort_level_4.order
                 ):
                     user.is_unlock_essay_pt = True
