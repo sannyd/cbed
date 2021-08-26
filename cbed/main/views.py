@@ -6,9 +6,10 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
-from cbed.main.models import Level, Result, Section
+from cbed.main.models import Level, Question, Result, Section
 from cbed.main.serializers import (
     HighScoreResultSerializer,
     HighScoreUserDetail,
@@ -43,6 +44,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
+
         if self.request.user.is_authenticated:
             return self.queryset.filter(
                 member_plan__lte=self.request.user.member_plan_simple
@@ -53,6 +55,26 @@ class SectionViewSet(ReadOnlyModelViewSet):
         if self.action == "retrieve":
             return SectionDetailSerializer
         return super().get_serializer_class()
+
+    @action(detail=False, url_path="essays")
+    def search_essay(self, request, *args, **kwargs):
+        if search := self.request.GET.get("search", "").strip():
+            sections = set(
+                Question.objects.filter(content__contains=search).values_list(
+                    "section", flat=True
+                )
+            )
+            queryset = self.queryset.filter(id__in=sections, level__name="Essays")
+        else:
+            queryset = self.queryset.none()
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, serializer_class=ResultSerializer, methods=["post"])
     def save_result(self, request, *args, **kwargs):
