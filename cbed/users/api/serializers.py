@@ -56,6 +56,7 @@ class ReceiptSerializer(serializers.Serializer):
             result = validator.validate(value, None, exclude_old_transactions=True)
 
             if in_app := result["receipt"]["in_app"]:
+                in_app = sorted(in_app, key=lambda k: k["purchase_date_ms"])
                 last_purchase = in_app[-1]
                 product_id = last_purchase["product_id"]
                 transaction_id = last_purchase["transaction_id"]
