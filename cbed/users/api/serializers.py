@@ -21,6 +21,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "avatar",
             "name",
             "state",
+            "phone_number",
             "member_plan",
             "member_plan_simple",
             "membership",
