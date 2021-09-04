@@ -35,7 +35,7 @@ class SectionSerializer(serializers.ModelSerializer):
             return True
 
         current_user: User = self.context["request"].user
-        if section.level.name == "MBE":
+        if section.level.name == "MBE Level Drills":
             if (
                 current_user.current_mbe_section
                 and section.order <= current_user.current_mbe_section.order

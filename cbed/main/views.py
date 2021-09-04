@@ -64,7 +64,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     "section", flat=True
                 )
             )
-            queryset = self.queryset.filter(id__in=sections, level__name="Essays")
+            queryset = self.queryset.filter(id__in=sections, level__name="Essay Drills & Videos")
         else:
             queryset = self.queryset.none()
 
@@ -87,7 +87,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
             result.total = serializer.validated_data["total"]
             result.save()
 
-            mbe_level = Level.objects.filter(name="MBE").first()
+            mbe_level = Level.objects.filter(name="MBE Level Drills").first()
 
             if mbe_level and mbe_level == section.level:
 
@@ -118,7 +118,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     user.save()
 
                 section_tort_level_4 = Section.objects.filter(
-                    name="Torts - Level 4", level__name="MBE"
+                    name="Torts - Level 4", level__name="MBE Level Drills"
                 ).first()
                 if (
                     section_tort_level_4

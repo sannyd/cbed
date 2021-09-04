@@ -32,7 +32,7 @@ class User(AbstractUser):
         blank=True,
         null=True,
         on_delete=SET_NULL,
-        limit_choices_to={"level__name": "MBE"},
+        limit_choices_to={"level__name": "MBE Level Drills"},
     )
     is_unlock_essay_pt = BooleanField(default=False)
     first_name = None  # type: ignore
