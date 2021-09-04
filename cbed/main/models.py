@@ -48,7 +48,7 @@ class Section(TimeStampedModel):
 
 class Question(TimeStampedModel):
     content = models.TextField()
-    youtube_url = models.URLField(max_length=1000, blank=True)
+    youtube_url = models.CharField(max_length=1000, blank=True)
     section = models.ForeignKey(
         Section, on_delete=models.CASCADE, related_name="questions"
     )
