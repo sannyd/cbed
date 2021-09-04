@@ -114,8 +114,9 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .order_by("-order")
                         .first()
                     )
-                    user.current_mbe_section = start_level_section
-                    user.save()
+                    if start_level_section:
+                        user.current_mbe_section = start_level_section
+                        user.save()
 
                 section_tort_level_4 = Section.objects.filter(
                     name="Torts - Level 4", level__name="MBE Level Drills"
