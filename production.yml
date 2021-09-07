@@ -31,6 +31,8 @@ services:
       - ./production_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.production/.postgres
+    ports:
+      - "5555:5432"
 
   traefik:
     build:
@@ -44,7 +46,6 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
-      - "0.0.0.0:5555:5555"
 
   redis:
     image: redis:5.0
