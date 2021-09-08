@@ -31,7 +31,7 @@ certificatesResolvers:
 http:
   routers:
     web-secure-router:
-      rule: "Host(`cbed.airdemo.xyz`)"
+      rule: "Host(`api.barexamdrills.com`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -42,7 +42,7 @@ http:
         certResolver: letsencrypt
 
     flower-secure-router:
-      rule: "Host(`cbed.airdemo.xyz`)"
+      rule: "Host(`api.barexamdrills.com`)"
       entryPoints:
         - flower
       service: flower
