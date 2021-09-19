@@ -1,3 +1,4 @@
+from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 
 from allauth.account import app_settings
@@ -12,6 +13,7 @@ from allauth.utils import build_absolute_uri
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from django.contrib.sites.models import Site
+from django.core.files import File
 from django.urls import reverse
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -114,8 +116,10 @@ class SSOSerializer(AppSerializer):
             raise UserIsDeactivatedException()
 
         if avatar_url:
-            auth_user.avatar.save(f"avatar_{auth_user.pk}", urlopen(avatar_url))
-        print(auth_user.avatar)
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(avatar_url).read())
+            img_temp.flush()
+            auth_user.avatar.save(f"avatar_{auth_user.pk}", File(img_temp))
         return auth_user
 
 
