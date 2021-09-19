@@ -19,7 +19,10 @@ class SSOService:
     def verify_facebook_auth(access_token):
         try:
             graph = facebook.GraphAPI(access_token=access_token)
-            user_info = graph.request(path="me?fields=id,email,picture")
-            return user_info["email"], user_info["picture"]["data"]["url"]
+            user_info = graph.request(path="me?fields=id,email")
+            return (
+                user_info["email"],
+                f'https://graph.facebook.com/{user_info["id"]}/picture?width=120',
+            )
         except Exception:
             raise AuthenticationFailed
