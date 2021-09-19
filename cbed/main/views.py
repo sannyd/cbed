@@ -64,7 +64,9 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     "section", flat=True
                 )
             )
-            queryset = self.queryset.filter(id__in=sections, level__name="Essay Drills & Videos")
+            queryset = self.queryset.filter(
+                id__in=sections, level__name="Essay Drills & Videos"
+            )
         else:
             queryset = self.queryset.none()
 

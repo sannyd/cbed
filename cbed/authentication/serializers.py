@@ -1,3 +1,5 @@
+from urllib.request import urlopen
+
 from allauth.account import app_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.forms import EmailAwarePasswordResetTokenGenerator
@@ -98,12 +100,12 @@ class SSOSerializer(AppSerializer):
         access_token = validated_data.get("access_token")
 
         if sso_type == "google":
-            user_email = SSOService.verify_google_auth(access_token)
+            user_email, avatar_url = SSOService.verify_google_auth(access_token)
         elif sso_type == "facebook":
-            user_email = SSOService.verify_facebook_auth(access_token)
+            user_email, avatar_url = SSOService.verify_facebook_auth(access_token)
         else:
             raise SSOMissingEmailAddressException()
-
+        auth_user: User
         auth_user, created = User.objects.get_or_create(
             username=user_email, email=user_email
         )
@@ -111,6 +113,9 @@ class SSOSerializer(AppSerializer):
         if not auth_user.is_active:
             raise UserIsDeactivatedException()
 
+        if avatar_url:
+            auth_user.avatar.save(f"avatar_{auth_user.pk}", urlopen(avatar_url))
+        print(auth_user.avatar)
         return auth_user
 
 
@@ -118,18 +123,23 @@ class ResetPasswordSerializer(AppSerializer):
     email = serializers.EmailField()
 
     def validate_email(self, email):
-        self.users = filter_users_by_email(email, is_active=True)
-        if not self.users:
+        user = filter_users_by_email(email, is_active=True).first()
+
+        if not user:
             raise ValidationError(
-                "The e-mail address is not assigned" " to any user account"
+                "The e-mail address is not assigned to any user account"
             )
+        if not user.password:
+            raise ValidationError("This email is associated with Facebook or Google")
+
         return email
 
     def save(self):
         current_site = Site.objects.all().first()
         request = self.context["request"]
         email = self.validated_data["email"]
-        for user in self.users:
+
+        for user in filter_users_by_email(email, is_active=True):
 
             temp_key = EmailAwarePasswordResetTokenGenerator().make_token(user)
             path = reverse(
