@@ -102,9 +102,9 @@ class SSOSerializer(AppSerializer):
         access_token = validated_data.get("access_token")
 
         if sso_type == "google":
-            user_email, avatar_url = SSOService.verify_google_auth(access_token)
+            user_email, avatar_url, name = SSOService.verify_google_auth(access_token)
         elif sso_type == "facebook":
-            user_email, avatar_url = SSOService.verify_facebook_auth(access_token)
+            user_email, avatar_url, name = SSOService.verify_facebook_auth(access_token)
         else:
             raise SSOMissingEmailAddressException()
         auth_user: User
@@ -120,6 +120,10 @@ class SSOSerializer(AppSerializer):
             img_temp.write(urlopen(avatar_url).read())
             img_temp.flush()
             auth_user.avatar.save(f"avatar_{auth_user.pk}", File(img_temp))
+        if name:
+            auth_user.name = name
+            auth_user.save()
+
         return auth_user
 
 
