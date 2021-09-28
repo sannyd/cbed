@@ -131,13 +131,13 @@ class ResetPasswordSerializer(AppSerializer):
     email = serializers.EmailField()
 
     def validate_email(self, email):
-        user = filter_users_by_email(email, is_active=True).first()
+        users = filter_users_by_email(email, is_active=True)
 
-        if not user:
+        if not users:
             raise ValidationError(
                 "The e-mail address is not assigned to any user account"
             )
-        if not user.password:
+        if not users[0].password:
             raise ValidationError("This email is associated with Facebook or Google")
 
         return email
