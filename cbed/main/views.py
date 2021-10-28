@@ -136,7 +136,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
 
 
 class ScoreBoardView(RetrieveAPIView):
-    queryset = User.objects.annotate(points=Sum("results__correct")).order_by("-points")
+    queryset = User.objects.order_by("-current_mbe_section__order")
     serializer_class = HighScoreResultSerializer
 
     def get(self, request, *args, **kwargs):

@@ -1,10 +1,10 @@
-build:
+local-build:
 	docker-compose -f local.yml build
 
-up:
+local-up:
 	docker-compose -f local.yml up -d
 
-down:
+local-down:
 	docker-compose -f local.yml down
 
 format:
@@ -15,7 +15,7 @@ migrate:
 	docker-compose -f local.yml run --rm django python manage.py makemigrations
 	docker-compose -f local.yml run --rm django python manage.py migrate
 
-shell:
+local-shell:
 	docker-compose -f local.yml run --rm  django python manage.py shell_plus
 
 prod-migrate:
