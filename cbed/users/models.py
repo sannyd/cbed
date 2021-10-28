@@ -62,7 +62,7 @@ class User(AbstractUser):
 
     @property
     def last_section_name(self):
-        return self.last_section.section.name
+        return self.current_mbe_section.name
 
     @points.setter
     def points(self, value):
