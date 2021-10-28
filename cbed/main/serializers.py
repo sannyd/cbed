@@ -118,7 +118,7 @@ class LevelDetailSerializer(LevelSerializer):
 class HighScoreUserDetail(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "name", "avatar", "last_section_name"]
+        fields = ["id", "name", "avatar", "points", "last_section_name"]
 
 
 class HighScoreResultSerializer(serializers.Serializer):
