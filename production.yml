@@ -20,6 +20,7 @@ services:
     command: /start
     volumes:
       - ../upload:/app/cbed/media/
+    restart: unless-stopped
 
   postgres:
     build:
@@ -33,6 +34,7 @@ services:
       - ./.envs/.production/.postgres
     ports:
       - "5555:5432"
+    restart: unless-stopped
 
   traefik:
     build:
@@ -46,10 +48,11 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
+    restart: unless-stopped
 
   redis:
     image: redis:5.0
-
+    restart: unless-stopped
 #  celeryworker:
 #    <<: *django
 #    image: cbed_production_celeryworker
