@@ -42,7 +42,7 @@ class SectionSerializer(serializers.ModelSerializer):
             ):
                 return True
             return False
-        return current_user.is_unlock_essay_pt
+        return True
 
     class Meta:
         model = Section
