@@ -138,7 +138,9 @@ class ResetPasswordSerializer(AppSerializer):
                 "The e-mail address is not assigned to any user account"
             )
         if not users[0].password:
-            raise ValidationError("This email has already been associated with a Facebook or Google login. Please login with either of those methods.")
+            raise ValidationError(
+                "This email has already been associated with a Facebook or Google login. Please login with either of those methods."
+            )
 
         return email
 

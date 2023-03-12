@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from cbed.authentication.views import (
+    DeactivateView,
     RegisterView,
     ResetPasswordView,
     SignInView,
@@ -14,6 +15,7 @@ urlpatterns = [
     path(r"auth/register", RegisterView.as_view(), name="register"),
     path(r"auth/single_sign_on", SSOView.as_view(), name="single_sign_on"),
     path(r"auth/signout", SignOutView.as_view(), name="Sign Out View"),
+    path(r"auth/deactivate", DeactivateView.as_view(), name="Deactivate View"),
     path(
         r"auth/request_reset_password",
         ResetPasswordView.as_view(),

@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
@@ -10,6 +12,8 @@ from .serializers import (
     SignInSerializer,
     SSOSerializer,
 )
+
+User = get_user_model()
 
 
 class SignInView(CreateAPIView):
@@ -34,4 +38,13 @@ class ResetPasswordView(CreateAPIView):
 
 class SignOutView(APIView):
     def post(self, request):
+        return Response({"user": str(request.user)}, status=status.HTTP_202_ACCEPTED)
+
+
+class DeactivateView(APIView):
+    def post(self, request):
+        user: User = request.user
+        user.is_active = False
+        user.username = f"{timezone.now()}_deleted_{user.email}"
+        user.save()
         return Response({"user": str(request.user)}, status=status.HTTP_202_ACCEPTED)
