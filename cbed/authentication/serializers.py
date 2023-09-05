@@ -150,7 +150,6 @@ class ResetPasswordSerializer(AppSerializer):
         email = self.validated_data["email"]
 
         for user in filter_users_by_email(email, is_active=True):
-
             temp_key = EmailAwarePasswordResetTokenGenerator().make_token(user)
             path = reverse(
                 "account_reset_password_from_key",

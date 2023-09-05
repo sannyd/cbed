@@ -44,7 +44,6 @@ class SectionViewSet(ReadOnlyModelViewSet):
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
-
         if self.request.user.is_authenticated:
             return self.queryset.filter(
                 member_plan__lte=self.request.user.member_plan_simple
@@ -65,7 +64,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                 )
             )
             queryset = self.queryset.filter(
-                id__in=sections, level__name="Essay Drills & Videos"
+                id__in=sections, level__is_drills_and_videos=True
             )
         else:
             queryset = self.queryset.none()
@@ -92,7 +91,6 @@ class SectionViewSet(ReadOnlyModelViewSet):
             mbe_level = Level.objects.filter(name="MBE Level Drills").first()
 
             if mbe_level and mbe_level == section.level:
-
                 if result.grade >= 90:
                     next_section = (
                         self.get_queryset()

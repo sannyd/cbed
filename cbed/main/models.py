@@ -15,6 +15,7 @@ class Level(TimeStampedModel):
     )
 
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
+    is_drills_and_videos = models.BooleanField(default=False)
 
     class Meta(object):
         ordering = ["order"]

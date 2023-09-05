@@ -1,35 +1,35 @@
 local-build:
-	docker-compose -f local.yml build
+	docker compose -f local.yml build
 
 local-up:
-	docker-compose -f local.yml up -d
+	docker compose -f local.yml up -d
 
 local-down:
-	docker-compose -f local.yml down
+	docker compose -f local.yml down
 
 format:
-	black .
-	isort . --profile black
+	/usr/bin/black cbed config --exclude "migrations"
+	/usr/bin/isort cbed config --profile black
 
 migrate:
-	docker-compose -f local.yml run --rm django python manage.py makemigrations
-	docker-compose -f local.yml run --rm django python manage.py migrate
+	docker compose -f local.yml run --rm django python manage.py makemigrations
+	docker compose -f local.yml run --rm django python manage.py migrate
 
 local-shell:
-	docker-compose -f local.yml run --rm  django python manage.py shell_plus
+	docker compose -f local.yml run --rm  django python manage.py shell_plus
 
 prod-migrate:
-	docker-compose -f production.yml run --rm django python manage.py migrate
+	docker compose -f production.yml run --rm django python manage.py migrate
 
 prod-up:
-	docker-compose -f production.yml up -d --build
-	docker-compose -f production.yml run --rm django python manage.py migrate
+	docker compose -f production.yml up -d --build
+	docker compose -f production.yml run --rm django python manage.py migrate
 
 prod-down:
-	docker-compose -f production.yml down
+	docker compose -f production.yml down
 
 prod-shell:
-	docker-compose -f production.yml run --rm  django python manage.py shell_plus
+	docker compose -f production.yml run --rm  django python manage.py shell_plus
 
 prod-backup:
-	docker-compose -f production.yml run --rm postgres backup
+	docker compose -f production.yml run --rm postgres backup

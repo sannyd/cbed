@@ -10,11 +10,15 @@ class SectionInline(SortableInlineAdminMixin, admin.TabularInline):
     show_change_link = True
     fields = ["name"]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related("level")
+
 
 @admin.register(Level)
 class LevelAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ["name", "member_plan", "created", "modified"]
-    list_filter = ["member_plan"]
+    list_display = ["name", "member_plan", "is_drills_and_videos", "modified"]
+    list_filter = ["member_plan", "is_drills_and_videos"]
     inlines = [SectionInline]
 
 
