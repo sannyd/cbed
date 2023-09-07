@@ -64,8 +64,10 @@ class SectionViewSet(ReadOnlyModelViewSet):
                 )
             )
             queryset = self.queryset.filter(
-                id__in=sections, level__is_drills_and_videos=True
+                id__in=sections
             )
+            if level_id := self.request.GET.get("level","").strip():
+                queryset = queryset.filter(level=level_id)
         else:
             queryset = self.queryset.none()
 
