@@ -9,6 +9,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
+from cbed.main.consts import LevelNames
 from cbed.main.models import Level, Question, Result, Section
 from cbed.main.serializers import (
     HighScoreResultSerializer,
@@ -90,7 +91,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
             result.total = serializer.validated_data["total"]
             result.save()
 
-            mbe_level = Level.objects.filter(name="MBE Level Drills").first()
+            mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()
 
             if mbe_level and mbe_level == section.level:
                 if result.grade >= 90:
@@ -121,7 +122,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         user.save()
 
                 section_tort_level_4 = Section.objects.filter(
-                    name="Torts - Level 4", level__name="MBE Level Drills"
+                    name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS
                 ).first()
                 if (
                     section_tort_level_4
@@ -130,6 +131,46 @@ class SectionViewSet(ReadOnlyModelViewSet):
                 ):
                     user.is_unlock_essay_pt = True
                     user.save()
+            mcq_level = Level.objects.filter(name=LevelNames.FL_MCQ_DRILLS).first()
+
+            if mcq_level and mcq_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=mcq_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_fl_mcq_drill is None or (
+                        next_section
+                        and user.current_fl_mcq_drill.order < next_section.order
+                    ):
+                        user.current_fl_mcq_drill = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=mcq_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_fl_mcq_drill = start_level_section
+                        user.save()
+
+                # section_tort_level_4 = Section.objects.filter(
+                #     name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS
+                # ).first()
+                # if (
+                #     section_tort_level_4
+                #     and user.current_mbe_section
+                #     and user.current_mbe_section.order >= section_tort_level_4.order
+                # ):
+                #     user.is_unlock_essay_pt = True
+                #     user.save()
             return JsonResponse(serializer.validated_data)
         else:
             return JsonResponse(serializer.errors)

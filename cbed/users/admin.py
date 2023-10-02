@@ -21,6 +21,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "password",
                     "member_plan",
                     "current_mbe_section",
+                    "current_fl_mcq_drill",
                     "is_unlock_essay_pt",
                 )
             },

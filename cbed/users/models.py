@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
+from cbed.main.consts import LevelNames
 from cbed.main.enums import MemberPlanSimple
 from cbed.transactions.enums import MemberPlanChoices
 
@@ -32,7 +33,16 @@ class User(AbstractUser):
         blank=True,
         null=True,
         on_delete=SET_NULL,
-        limit_choices_to={"level__name": "MBE Level Drills"},
+        limit_choices_to={"level__name": LevelNames.MBE_LEVEL_DRILLS},
+        related_name="current_mbe_section",
+    )
+    current_fl_mcq_drill = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.FL_MCQ_DRILLS},
+        related_name="current_fl_mcq_drill",
     )
     is_unlock_essay_pt = BooleanField(default=False)
     first_name = None  # type: ignore

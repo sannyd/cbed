@@ -1,8 +1,8 @@
-from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 from rest_framework.fields import BooleanField
 
+from cbed.main.consts import LevelNames
 from cbed.main.models import Answer, Level, Question, Result, Section
 from cbed.users.models import User
 
@@ -31,14 +31,21 @@ class SectionSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(BooleanField)
     def get_is_available(self, section: Section):
-        if section.name == "Torts - Level 1" or "Free" in section.level.name:
+        if section.name == "Torts - Level 1" or section.name == "Level 1 - FL MCQ" or "Free" in section.level.name:
             return True
 
         current_user: User = self.context["request"].user
-        if section.level.name == "MBE Level Drills":
+        if section.level.name == LevelNames.MBE_LEVEL_DRILLS:
             if (
                 current_user.current_mbe_section
                 and section.order <= current_user.current_mbe_section.order
+            ):
+                return True
+            return False
+        if section.level.name == LevelNames.FL_MCQ_DRILLS:
+            if (
+                current_user.current_fl_mcq_drill
+                and section.order <= current_user.current_fl_mcq_drill.order
             ):
                 return True
             return False
