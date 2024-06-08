@@ -186,25 +186,25 @@ class ScoreBoardView(RetrieveAPIView):
                 "baby_bar_june": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.BABY_BAR_JUNE
-                    )[:20],
+                    ),
                     many=True,
                 ).data,
                 "baby_bar_oct": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.BABY_BAR_OCT
-                    )[:20],
+                    ),
                     many=True,
                 ).data,
                 "pro_bar_feb": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.PRO_BAR_FEB
-                    )[:20],
+                    ),
                     many=True,
                 ).data,
                 "pro_bar_july": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.PRO_BAR_JULY
-                    )[:20],
+                    ),
                     many=True,
                 ).data,
             }
