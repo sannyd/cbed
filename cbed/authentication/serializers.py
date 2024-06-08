@@ -21,8 +21,6 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from cbed.authentication.sso_service import SSOService
-from cbed.main.consts import LevelNames
-from cbed.main.models import Level
 from cbed.users.models import User
 from config.exception import (
     SSOMissingEmailAddressException,
@@ -30,20 +28,6 @@ from config.exception import (
     WrongAssociatedAccountException,
     WrongCredentialsException,
 )
-
-
-def fill_up_profile(user):
-    mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()
-    if mbe_level and user.current_mbe_section is None:
-        user.current_mbe_section = mbe_level
-        print(f"User {user} has been assigned to MBE_LEVEL_DRILLS.")
-
-    mcq_level = Level.objects.filter(name=LevelNames.FL_MCQ_DRILLS).first()
-    if mcq_level and user.current_fl_mcq_drill is None:
-        user.current_fl_mcq_drill = mcq_level
-        print(f"User {user} has been assigned to FL_MCQ_DRILLS.")
-
-    user.save()
 
 
 class AppSerializer(Serializer):
@@ -78,9 +62,8 @@ class RegisterSerializer(ModelSerializer):
         validated_data["password"] = make_password(password)
         validated_data["username"] = validated_data["email"]
 
-        user = User.objects.create(**validated_data)
-        fill_up_profile(user)
-        return user
+        return User.objects.create(**validated_data)
+
 
 class SignInSerializer(AppSerializer):
     email = serializers.EmailField()
@@ -100,7 +83,6 @@ class SignInSerializer(AppSerializer):
             raise WrongAssociatedAccountException()
 
         if auth_user and auth_user.is_active:
-            fill_up_profile(auth_user)
             return auth_user
 
         raise WrongCredentialsException()
@@ -141,7 +123,7 @@ class SSOSerializer(AppSerializer):
         if name:
             auth_user.name = name
             auth_user.save()
-        fill_up_profile(auth_user)
+
         return auth_user
 
 
@@ -183,8 +165,8 @@ class ResetPasswordSerializer(AppSerializer):
             }
 
             if (
-                    app_settings.AUTHENTICATION_METHOD
-                    != app_settings.AuthenticationMethod.EMAIL
+                app_settings.AUTHENTICATION_METHOD
+                != app_settings.AuthenticationMethod.EMAIL
             ):
                 context["username"] = user_username(user)
             get_adapter(request).send_mail(
