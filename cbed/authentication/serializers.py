@@ -57,6 +57,18 @@ def fill_up_profile(user):
         user.current_fl_mcq_drill = start_mcq_section
         print(f"User {user} has been assigned to FL_MCQ_DRILLS.")
 
+    ca_level = Level.objects.filter(name=LevelNames.CA_MCQ_DRILLS).first()
+    if ca_level and user.current_ca_mcq_drill is None:
+        start_ca_section = (
+            Section.objects.filter(
+                level=ca_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_ca_mcq_drill = start_ca_section
+        print(f"User {user} has been assigned to CA_MCQ_DRILLS.")
+
     user.save()
 
 

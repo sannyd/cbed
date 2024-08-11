@@ -160,6 +160,21 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     if start_level_section:
                         user.current_fl_mcq_drill = start_level_section
                         user.save()
+            ca_level = Level.objects.filter(name=LevelNames.CA_MCQ_DRILLS).first()
+            if ca_level and ca_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=ca_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_ca_mcq_drill is None or (
+                        next_section
+                        and user.current_ca_mcq_drill.order < next_section.order
+                    ):
+                        user.current_ca_mcq_drill = next_section
+                        user.save()
 
                 # section_tort_level_4 = Section.objects.filter(
                 #     name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS
