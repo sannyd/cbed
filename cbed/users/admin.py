@@ -51,4 +51,4 @@ class UserAdmin(auth_admin.UserAdmin):
     ]
     list_filter = ["is_staff", "member_plan", "is_superuser", "is_active", "groups"]
 
-    search_fields = ["name"]
+    search_fields = ["name", "email", "username"]
