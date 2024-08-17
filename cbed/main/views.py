@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from cbed.main.consts import LevelNames
-from cbed.main.models import Level, Question, Result, Section
+from cbed.main.models import Level, Question, Result, Section, Config
 from cbed.main.serializers import (
     HighScoreResultSerializer,
     HighScoreUserDetail,
@@ -67,7 +67,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
             queryset = self.queryset.filter(
                 id__in=sections
             )
-            if level_id := self.request.GET.get("level","").strip():
+            if level_id := self.request.GET.get("level", "").strip():
                 queryset = queryset.filter(level=level_id)
         else:
             queryset = self.queryset.none()
@@ -102,8 +102,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_mbe_section is None or (
-                        next_section
-                        and user.current_mbe_section.order < next_section.order
+                            next_section
+                            and user.current_mbe_section.order < next_section.order
                     ):
                         user.current_mbe_section = next_section
                         user.save()
@@ -125,9 +125,9 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS
                 ).first()
                 if (
-                    section_tort_level_4
-                    and user.current_mbe_section
-                    and user.current_mbe_section.order >= section_tort_level_4.order
+                        section_tort_level_4
+                        and user.current_mbe_section
+                        and user.current_mbe_section.order >= section_tort_level_4.order
                 ):
                     user.is_unlock_essay_pt = True
                     user.save()
@@ -142,8 +142,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_fl_mcq_drill is None or (
-                        next_section
-                        and user.current_fl_mcq_drill.order < next_section.order
+                            next_section
+                            and user.current_fl_mcq_drill.order < next_section.order
                     ):
                         user.current_fl_mcq_drill = next_section
                         user.save()
@@ -170,8 +170,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_ca_mcq_drill is None or (
-                        next_section
-                        and user.current_ca_mcq_drill.order < next_section.order
+                            next_section
+                            and user.current_ca_mcq_drill.order < next_section.order
                     ):
                         user.current_ca_mcq_drill = next_section
                         user.save()
@@ -222,5 +222,19 @@ class ScoreBoardView(RetrieveAPIView):
                     ),
                     many=True,
                 ).data,
+            }
+        )
+
+
+class GlobalConfigView(RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+
+    def get(self, request, *args, **kwargs):
+        config = Config.objects.first() or Config.objects.create()
+        return JsonResponse(
+            {
+                "is_enable_login": config.is_enable_login,
+                "is_enable_delete_account": config.is_enable_delete_account,
             }
         )

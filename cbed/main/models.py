@@ -86,3 +86,14 @@ class Result(TimeStampedModel):
     @property
     def grade(self):
         return int(100 * self.correct / self.total)
+
+
+class Config(models.Model):
+    is_enable_login = models.BooleanField(default=True)
+    is_enable_delete_account = models.BooleanField(default=True)
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        if Config.objects.count() > 1:
+            raise Exception("Only one Config object is allowed")
