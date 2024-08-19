@@ -56,6 +56,13 @@ class SectionSerializer(serializers.ModelSerializer):
             ):
                 return True
             return False
+        if section.level.name == LevelNames.MPRE_DRILLS:
+            if (
+                current_user.current_mpre_drill
+                and section.order <= current_user.current_mpre_drill.order
+            ):
+                return True
+            return False
         return True
 
     class Meta:

@@ -32,7 +32,7 @@ from config.exception import (
 )
 
 
-def fill_up_profile(user):
+def fill_up_profile(user:User):
     mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()
     if mbe_level and user.current_mbe_section is None:
         start_mbe_section = (
@@ -69,6 +69,18 @@ def fill_up_profile(user):
         user.current_ca_mcq_drill = start_ca_section
         print(f"User {user} has been assigned to CA_MCQ_DRILLS.")
 
+    # MPRE_DRILLS
+    mpre_level = Level.objects.filter(name=LevelNames.MPRE_DRILLS).first()
+    if mpre_level and user.current_mpre_drill is None:
+        start_mpre_section = (
+            Section.objects.filter(
+                level=mpre_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_mpre_drill = start_mpre_section
+        print(f"User {user} has been assigned to MPRE_DRILLS.")
     user.save()
 
 

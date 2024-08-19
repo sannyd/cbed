@@ -175,6 +175,22 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     ):
                         user.current_ca_mcq_drill = next_section
                         user.save()
+            # MPRE_DRILLS
+            mpre_level = Level.objects.filter(name=LevelNames.MPRE_DRILLS).first()
+            if mpre_level and mpre_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=mpre_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_mpre_drill is None or (
+                            next_section
+                            and user.current_mpre_drill.order < next_section.order
+                    ):
+                        user.current_mpre_drill = next_section
+                        user.save()
 
                 # section_tort_level_4 = Section.objects.filter(
                 #     name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS

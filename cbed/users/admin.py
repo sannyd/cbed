@@ -23,6 +23,7 @@ class UserAdmin(auth_admin.UserAdmin):
                     "current_mbe_section",
                     "current_fl_mcq_drill",
                     "current_ca_mcq_drill",
+                    "current_mpre_drill",
                     "is_unlock_essay_pt",
                 )
             },

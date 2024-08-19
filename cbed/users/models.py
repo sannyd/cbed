@@ -52,6 +52,14 @@ class User(AbstractUser):
         limit_choices_to={"level__name": LevelNames.CA_MCQ_DRILLS},
         related_name="current_ca_mcq_drill",
     )
+    current_mpre_drill = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.MPRE_DRILLS},
+        related_name="current_mpre_drill",
+    )
     is_unlock_essay_pt = BooleanField(default=False)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
