@@ -4,9 +4,17 @@ Werkzeug==1.0.1 # https://github.com/pallets/werkzeug
 ipdb==0.13.7  # https://github.com/gotcha/ipdb
 psycopg2==2.8.6  # https://github.com/psycopg/psycopg2
 watchgod==0.7  # https://github.com/samuelcolvin/watchgod
+# Testing
+# ------------------------------------------------------------------------------
+mypy==0.901  # https://github.com/python/mypy
+django-stubs==1.8.0  # https://github.com/typeddjango/django-stubs
+pytest==6.2.4  # https://github.com/pytest-dev/pytest
+pytest-sugar==0.9.4  # https://github.com/Frozenball/pytest-sugar
 
 # Django
 # ------------------------------------------------------------------------------
 factory-boy==3.2.0  # https://github.com/FactoryBoy/factory_boy
 
 django-debug-toolbar==3.2.1  # https://github.com/jazzband/django-debug-toolbar
+django-coverage-plugin==1.8.0  # https://github.com/nedbat/django_coverage_plugin
+pytest-django==4.4.0  # https://github.com/pytest-dev/pytest-django

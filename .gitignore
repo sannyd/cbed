@@ -332,3 +332,4 @@ cbed/media/
 !.envs/.local/
 .idea/*
 local_postgres_data_backups
+local_postgres_data
