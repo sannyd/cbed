@@ -32,7 +32,7 @@ from config.exception import (
 )
 
 
-def fill_up_profile(user:User):
+def fill_up_profile(user: User):
     mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()
     if mbe_level and user.current_mbe_section is None:
         start_mbe_section = (
@@ -119,6 +119,7 @@ class RegisterSerializer(ModelSerializer):
         user = User.objects.create(**validated_data)
         fill_up_profile(user)
         return user
+
 
 class SignInSerializer(AppSerializer):
     email = serializers.EmailField()
@@ -221,8 +222,8 @@ class ResetPasswordSerializer(AppSerializer):
             }
 
             if (
-                    app_settings.AUTHENTICATION_METHOD
-                    != app_settings.AuthenticationMethod.EMAIL
+                app_settings.AUTHENTICATION_METHOD
+                != app_settings.AuthenticationMethod.EMAIL
             ):
                 context["username"] = user_username(user)
             get_adapter(request).send_mail(

@@ -1,4 +1,3 @@
-from django.db.models import Sum
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
@@ -64,9 +63,7 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     "section", flat=True
                 )
             )
-            queryset = self.queryset.filter(
-                id__in=sections
-            )
+            queryset = self.queryset.filter(id__in=sections)
             if level_id := self.request.GET.get("level", "").strip():
                 queryset = queryset.filter(level=level_id)
         else:
@@ -102,8 +99,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_mbe_section is None or (
-                            next_section
-                            and user.current_mbe_section.order < next_section.order
+                        next_section
+                        and user.current_mbe_section.order < next_section.order
                     ):
                         user.current_mbe_section = next_section
                         user.save()
@@ -125,9 +122,9 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS
                 ).first()
                 if (
-                        section_tort_level_4
-                        and user.current_mbe_section
-                        and user.current_mbe_section.order >= section_tort_level_4.order
+                    section_tort_level_4
+                    and user.current_mbe_section
+                    and user.current_mbe_section.order >= section_tort_level_4.order
                 ):
                     user.is_unlock_essay_pt = True
                     user.save()
@@ -142,8 +139,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_fl_mcq_drill is None or (
-                            next_section
-                            and user.current_fl_mcq_drill.order < next_section.order
+                        next_section
+                        and user.current_fl_mcq_drill.order < next_section.order
                     ):
                         user.current_fl_mcq_drill = next_section
                         user.save()
@@ -170,8 +167,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_ca_mcq_drill is None or (
-                            next_section
-                            and user.current_ca_mcq_drill.order < next_section.order
+                        next_section
+                        and user.current_ca_mcq_drill.order < next_section.order
                     ):
                         user.current_ca_mcq_drill = next_section
                         user.save()
@@ -186,8 +183,8 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         .first()
                     )
                     if user.current_mpre_drill is None or (
-                            next_section
-                            and user.current_mpre_drill.order < next_section.order
+                        next_section
+                        and user.current_mpre_drill.order < next_section.order
                     ):
                         user.current_mpre_drill = next_section
                         user.save()

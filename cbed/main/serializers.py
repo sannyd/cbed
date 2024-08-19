@@ -31,7 +31,11 @@ class SectionSerializer(serializers.ModelSerializer):
 
     @swagger_serializer_method(BooleanField)
     def get_is_available(self, section: Section):
-        if section.name == "Torts - Level 1" or section.name == "Level 1 - FL MCQ" or "Free" in section.level.name:
+        if (
+            section.name == "Torts - Level 1"
+            or section.name == "Level 1 - FL MCQ"
+            or "Free" in section.level.name
+        ):
             return True
 
         current_user: User = self.context["request"].user

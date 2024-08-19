@@ -1,3 +1,4 @@
+# pylint: disable=E402
 import os
 
 import django
@@ -7,7 +8,7 @@ import pandas
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
 django.setup()
 
-from cbed.main.models import Answer, Level, Question, Section
+from cbed.main.models import Answer, Level, Question, Section  # noqa: E402
 
 Level.objects.get_or_create(id=20, name="MBE xxx")
 Level.objects.get_or_create(id=9, name="Essays")

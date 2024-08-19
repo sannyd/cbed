@@ -5,7 +5,7 @@ from cbed.users.models import User
 
 
 class Command(BaseCommand):
-    help = 'Fill up user profiles with default drills'
+    help = "Fill up user profiles with default drills"
 
     def handle(self, *args, **kwargs):
         for user in User.objects.all():

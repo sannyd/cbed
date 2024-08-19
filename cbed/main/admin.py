@@ -69,7 +69,7 @@ class ResultAdmin(admin.ModelAdmin):
     list_display = ["user", "section", "correct", "total", "created", "modified"]
     list_filter = ["user", "section"]
 
+
 @admin.register(Config)
 class ConfigAdmin(admin.ModelAdmin):
-    list_display = ('is_enable_login', 'is_enable_delete_account')
-
+    list_display = ("is_enable_login", "is_enable_delete_account")
