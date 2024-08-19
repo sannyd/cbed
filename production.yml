@@ -18,6 +18,9 @@ services:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
     command: /start
+    volumes:
+      - ../upload:/app/cbed/media/
+    restart: unless-stopped
 
   postgres:
     build:
@@ -26,9 +29,12 @@ services:
     image: cbed_production_postgres
     volumes:
       - production_postgres_data:/var/lib/postgresql/data:Z
-      - production_postgres_data_backups:/backups:z
+      - ./production_postgres_data_backups:/backups:z
     env_file:
       - ./.envs/.production/.postgres
+    ports:
+      - "5555:5432"
+    restart: unless-stopped
 
   traefik:
     build:
@@ -42,22 +48,22 @@ services:
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
-      - "0.0.0.0:5555:5555"
+    restart: unless-stopped
 
   redis:
     image: redis:5.0
-
-  celeryworker:
-    <<: *django
-    image: cbed_production_celeryworker
-    command: /start-celeryworker
-
-  celerybeat:
-    <<: *django
-    image: cbed_production_celerybeat
-    command: /start-celerybeat
-
-  flower:
-    <<: *django
-    image: cbed_production_flower
-    command: /start-flower
+    restart: unless-stopped
+#  celeryworker:
+#    <<: *django
+#    image: cbed_production_celeryworker
+#    command: /start-celeryworker
+#
+#  celerybeat:
+#    <<: *django
+#    image: cbed_production_celerybeat
+#    command: /start-celerybeat
+#
+#  flower:
+#    <<: *django
+#    image: cbed_production_flower
+#    command: /start-flower

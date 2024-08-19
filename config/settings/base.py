@@ -1,6 +1,8 @@
 """
 Base settings to build other settings files upon.
 """
+
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -67,17 +69,23 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "allauth",
     "allauth.account",
-    "allauth.socialaccount",
-    "django_celery_beat",
+    # "allauth.socialaccount",
+    # "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
     "drf_yasg",
+    "adminsortable2",
+    "django_extensions",
+    "django_better_admin_arrayfield",
+    "phonenumber_field",
 ]
 
 LOCAL_APPS = [
     "cbed.users.apps.UsersConfig",
     "cbed.authentication",
+    "cbed.main",
+    "cbed.transactions",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -254,6 +262,12 @@ LOGGING = {
         }
     },
     "root": {"level": "INFO", "handlers": ["console"]},
+    # "loggers": {
+    #     "django.db.backends": {
+    #         "level": "DEBUG",
+    #         "handlers": ["console"],
+    #     }
+    # },
 }
 
 # Celery
@@ -298,9 +312,11 @@ SOCIALACCOUNT_ADAPTER = "cbed.users.adapters.SocialAccountAdapter"
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "PAGE_SIZE": 20,
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
@@ -312,3 +328,12 @@ SWAGGER_SETTINGS = {
         "Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}
     },
 }
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+}
+
+BUNDLE_ID = "com.barexamdrills.appx"
+AUTO_RETRY_WRONG_ENV_REQUEST = True
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000

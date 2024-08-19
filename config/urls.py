@@ -2,13 +2,13 @@ from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.admin import AdminSite
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from drf_yasg import openapi
-from rest_framework import permissions
-from rest_framework.authtoken.views import obtain_auth_token
 from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -18,6 +18,10 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
+
+AdminSite.site_header = "CBED administration"
+AdminSite.site_title = "CBED site admin"
+AdminSite.index_title = "CBED administration"
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -35,6 +39,7 @@ urlpatterns = [
 # API URLS
 urlpatterns += [
     # API base url
+    path("favicon.ico", RedirectView.as_view(url="static/images/favicons/favicon.ico")),
     path("api/", include("config.api_router")),
     path("api/", include("cbed.authentication.urls")),
     url(

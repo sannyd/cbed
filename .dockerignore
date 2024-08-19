@@ -7,3 +7,8 @@
 .pre-commit-config.yaml
 .readthedocs.yml
 .travis.yml
+venv
+.ipython
+import-data
+local_postgres_data
+local_postgres_data_backups

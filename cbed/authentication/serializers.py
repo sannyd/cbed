@@ -1,19 +1,87 @@
-from uuid import uuid4
+from tempfile import NamedTemporaryFile
+from urllib.request import urlopen
 
+from allauth.account import app_settings
+from allauth.account.adapter import get_adapter
+from allauth.account.forms import EmailAwarePasswordResetTokenGenerator
+from allauth.account.utils import (
+    filter_users_by_email,
+    user_pk_to_url_str,
+    user_username,
+)
+from allauth.utils import build_absolute_uri
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
+from django.contrib.sites.models import Site
+from django.core.files import File
+from django.urls import reverse
 from rest_framework import serializers
-from rest_framework.serializers import Serializer
+from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from cbed.authentication.sso_service import SSOService
+from cbed.main.consts import LevelNames
+from cbed.main.models import Level, Section
 from cbed.users.models import User
 from config.exception import (
-    WrongCredentialsException,
-    WrongAssociatedAccountException,
     SSOMissingEmailAddressException,
     UserIsDeactivatedException,
+    WrongAssociatedAccountException,
+    WrongCredentialsException,
 )
+
+
+def fill_up_profile(user: User):
+    mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()
+    if mbe_level and user.current_mbe_section is None:
+        start_mbe_section = (
+            Section.objects.filter(
+                level=mbe_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_mbe_section = start_mbe_section
+        print(f"User {user} has been assigned to MBE_LEVEL_DRILLS.")
+
+    mcq_level = Level.objects.filter(name=LevelNames.FL_MCQ_DRILLS).first()
+    if mcq_level and user.current_fl_mcq_drill is None:
+        start_mcq_section = (
+            Section.objects.filter(
+                level=mcq_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_fl_mcq_drill = start_mcq_section
+        print(f"User {user} has been assigned to FL_MCQ_DRILLS.")
+
+    ca_level = Level.objects.filter(name=LevelNames.CA_MCQ_DRILLS).first()
+    if ca_level and user.current_ca_mcq_drill is None:
+        start_ca_section = (
+            Section.objects.filter(
+                level=ca_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_ca_mcq_drill = start_ca_section
+        print(f"User {user} has been assigned to CA_MCQ_DRILLS.")
+
+    # MPRE_DRILLS
+    mpre_level = Level.objects.filter(name=LevelNames.MPRE_DRILLS).first()
+    if mpre_level and user.current_mpre_drill is None:
+        start_mpre_section = (
+            Section.objects.filter(
+                level=mpre_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_mpre_drill = start_mpre_section
+        print(f"User {user} has been assigned to MPRE_DRILLS.")
+    user.save()
 
 
 class AppSerializer(Serializer):
@@ -24,25 +92,33 @@ class AppSerializer(Serializer):
         pass
 
 
-class RegisterSerializer(AppSerializer):
+class RegisterSerializer(ModelSerializer):
     email = serializers.EmailField()
+    name = serializers.CharField()
+    state = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
-    def validate(self, attrs):
-        if User.objects.filter(email=(attrs["email"].lower())).exists():
-            raise serializers.ValidationError(
-                {"email": "This email has been registered"}
-            )
+    class Meta:
+        model = User
+        fields = ["email", "password", "name", "state", "phone_number", "avatar"]
+
+    def validate_email(self, email):
+        email = email.lower().strip()
+        if email:
+            if User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    {"email": "This email has been registered"}
+                )
+        return email
 
     def create(self, validated_data):
-        email = validated_data["email"].lower()
         password = validated_data["password"]
+        validated_data["password"] = make_password(password)
+        validated_data["username"] = validated_data["email"]
 
-        return User.objects.create(
-            username=email,
-            email=email,
-            password=password,
-        )
+        user = User.objects.create(**validated_data)
+        fill_up_profile(user)
+        return user
 
 
 class SignInSerializer(AppSerializer):
@@ -63,6 +139,7 @@ class SignInSerializer(AppSerializer):
             raise WrongAssociatedAccountException()
 
         if auth_user and auth_user.is_active:
+            fill_up_profile(auth_user)
             return auth_user
 
         raise WrongCredentialsException()
@@ -82,21 +159,74 @@ class SSOSerializer(AppSerializer):
         access_token = validated_data.get("access_token")
 
         if sso_type == "google":
-            user_email = SSOService.verify_google_auth(access_token)
+            user_email, avatar_url, name = SSOService.verify_google_auth(access_token)
         elif sso_type == "facebook":
-            user_email = SSOService.verify_facebook_auth(access_token)
+            user_email, avatar_url, name = SSOService.verify_facebook_auth(access_token)
         else:
             raise SSOMissingEmailAddressException()
+        auth_user: User
+        auth_user, created = User.objects.get_or_create(
+            username=user_email, email=user_email
+        )
 
-        auth_user = User.objects(email=user_email).first()
-
-        if not auth_user:
-            auth_user = User.objects.create(
-                email=user_email,
-                is_verified=True,
-            )
-
-        if auth_user and not auth_user.is_active:
+        if not auth_user.is_active:
             raise UserIsDeactivatedException()
 
+        if avatar_url:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(avatar_url).read())
+            img_temp.flush()
+            auth_user.avatar.save(f"avatar_{auth_user.pk}", File(img_temp))
+        if name:
+            auth_user.name = name
+            auth_user.save()
+        fill_up_profile(auth_user)
         return auth_user
+
+
+class ResetPasswordSerializer(AppSerializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, email):
+        users = filter_users_by_email(email, is_active=True)
+
+        if not users:
+            raise ValidationError(
+                "The e-mail address is not assigned to any user account"
+            )
+        if not users[0].password:
+            raise ValidationError(
+                "This email has already been associated with Google login. Please login with either of those methods."
+            )
+
+        return email
+
+    def save(self):
+        current_site = Site.objects.all().first()
+        request = self.context["request"]
+        email = self.validated_data["email"]
+
+        for user in filter_users_by_email(email, is_active=True):
+            temp_key = EmailAwarePasswordResetTokenGenerator().make_token(user)
+            path = reverse(
+                "account_reset_password_from_key",
+                kwargs=dict(uidb36=user_pk_to_url_str(user), key=temp_key),
+            )
+            url = build_absolute_uri(request, path)
+
+            context = {
+                "current_site": current_site,
+                "user": user,
+                "password_reset_url": url,
+                "request": request,
+            }
+
+            if (
+                app_settings.AUTHENTICATION_METHOD
+                != app_settings.AuthenticationMethod.EMAIL
+            ):
+                context["username"] = user_username(user)
+            get_adapter(request).send_mail(
+                "account/email/password_reset_key", email, context
+            )
+        return self.validated_data["email"]
