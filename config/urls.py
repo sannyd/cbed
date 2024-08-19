@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
@@ -39,6 +39,7 @@ urlpatterns = [
 # API URLS
 urlpatterns += [
     # API base url
+    path("favicon.ico", RedirectView.as_view(url="static/images/favicons/favicon.ico")),
     path("api/", include("config.api_router")),
     path("api/", include("cbed.authentication.urls")),
     url(
