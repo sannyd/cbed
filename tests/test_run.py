@@ -2,12 +2,11 @@ import pytest
 
 
 @pytest.mark.django_db
-def test_model(self):
+def test_model():
     from cbed.main.models import Level
 
-    self.level1 = Level.objects.create(name="lv 1")
-    self.level2 = Level.objects.create(name="lv 2")
+    level1 = Level.objects.create(name="lv 1")
+    level2 = Level.objects.create(name="lv 2")
 
-    print(self.level1.order)
-    print(self.level2.order)
-    self.assertIsNotNone(self.level1)
+    assert level1.name == "lv 1"
+    assert level2.name == "lv 2"

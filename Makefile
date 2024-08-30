@@ -17,6 +17,10 @@ migrate:
 
 bash:
 	docker compose -f local.yml run --rm  django  bash
+
+test:
+	docker compose -f local.yml run --rm  django  pytest
+
 local-shell:
 	docker compose -f local.yml run --rm  django python manage.py shell_plus
 
