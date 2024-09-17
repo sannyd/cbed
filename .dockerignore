@@ -12,3 +12,4 @@ venv
 import-data
 local_postgres_data
 local_postgres_data_backups
+production_postgres_data_backups

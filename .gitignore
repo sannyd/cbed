@@ -333,3 +333,4 @@ cbed/media/
 .idea/*
 local_postgres_data_backups
 local_postgres_data
+production_postgres_data_backups
