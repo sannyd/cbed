@@ -67,6 +67,69 @@ class SectionSerializer(serializers.ModelSerializer):
             ):
                 return True
             return False
+        if section.level.name == LevelNames.AGENCY_LEVEL:
+            if (
+                current_user.current_agency_level
+                and section.order <= current_user.current_agency_level.order
+            ):
+                return True
+            return False
+        if section.level.name == LevelNames.PARTNERSHIPS_LEVEL:
+            if (
+                current_user.current_partnerships_level
+                and section.order <= current_user.current_partnerships_level.order
+            ):
+                return True
+            return False
+
+        if section.level.name == LevelNames.CORPS_LEVEL:
+            if (
+                current_user.current_corps_level
+                and section.order <= current_user.current_corps_level.order
+            ):
+                return True
+            return False
+
+        if section.level.name == LevelNames.CONFLICTS_LEVEL:
+            if (
+                current_user.current_conflicts_level
+                and section.order <= current_user.current_conflicts_level.order
+            ):
+                return True
+            return False
+
+        if section.level.name == LevelNames.FAM_LAW_LEVEL:
+            if (
+                current_user.current_fam_law_level
+                and section.order <= current_user.current_fam_law_level.order
+            ):
+                return True
+            return False
+
+        if section.level.name == LevelNames.TRUSTS_LEVEL:
+            if (
+                current_user.current_trusts_level
+                and section.order <= current_user.current_trusts_level.order
+            ):
+                return True
+            return False
+
+        if section.level.name == LevelNames.WILLS_LEVEL:
+            if (
+                current_user.current_wills_level
+                and section.order <= current_user.current_wills_level.order
+            ):
+                return True
+            return False
+
+        if section.level.name == LevelNames.SEC_TRANS_LEVEL:
+            if (
+                current_user.current_sec_trans_level
+                and section.order <= current_user.current_sec_trans_level.order
+            ):
+                return True
+            return False
+
         return True
 
     class Meta:

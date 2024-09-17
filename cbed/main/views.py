@@ -189,16 +189,147 @@ class SectionViewSet(ReadOnlyModelViewSet):
                         user.current_mpre_drill = next_section
                         user.save()
 
-                # section_tort_level_4 = Section.objects.filter(
-                #     name="Torts - Level 4", level__name=LevelNames.MBE_LEVEL_DRILLS
-                # ).first()
-                # if (
-                #     section_tort_level_4
-                #     and user.current_mbe_section
-                #     and user.current_mbe_section.order >= section_tort_level_4.order
-                # ):
-                #     user.is_unlock_essay_pt = True
-                #     user.save()
+            # AGENCY_LEVEL
+            agency_level = Level.objects.filter(name=LevelNames.AGENCY_LEVEL).first()
+            if agency_level and agency_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=agency_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_agency_level is None or (
+                        next_section
+                        and user.current_agency_level.order < next_section.order
+                    ):
+                        user.current_agency_level = next_section
+                        user.save()
+
+            # PARTNERSHIPS_LEVEL
+            partnerships_level = Level.objects.filter(
+                name=LevelNames.PARTNERSHIPS_LEVEL
+            ).first()
+            if partnerships_level and partnerships_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=partnerships_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_partnerships_level is None or (
+                        next_section
+                        and user.current_partnerships_level.order < next_section.order
+                    ):
+                        user.current_partnerships_level = next_section
+                        user.save()
+
+            # CORPS_LEVEL
+            corps_level = Level.objects.filter(name=LevelNames.CORPS_LEVEL).first()
+            if corps_level and corps_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=corps_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_corps_level is None or (
+                        next_section
+                        and user.current_corps_level.order < next_section.order
+                    ):
+                        user.current_corps_level = next_section
+                        user.save()
+
+            # CONFLICTS_LEVEL
+            conflicts_level = Level.objects.filter(
+                name=LevelNames.CONFLICTS_LEVEL
+            ).first()
+            if conflicts_level and conflicts_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=conflicts_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_conflicts_level is None or (
+                        next_section
+                        and user.current_conflicts_level.order < next_section.order
+                    ):
+                        user.current_conflicts_level = next_section
+                        user.save()
+
+            # FAM_LAW_LEVEL
+            fam_law_level = Level.objects.filter(name=LevelNames.FAM_LAW_LEVEL).first()
+            if fam_law_level and fam_law_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=fam_law_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_fam_law_level is None or (
+                        next_section
+                        and user.current_fam_law_level.order < next_section.order
+                    ):
+                        user.current_fam_law_level = next_section
+                        user.save()
+
+            # TRUSTS_LEVEL
+            trusts_level = Level.objects.filter(name=LevelNames.TRUSTS_LEVEL).first()
+            if trusts_level and trusts_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=trusts_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_trusts_level is None or (
+                        next_section
+                        and user.current_trusts_level.order < next_section.order
+                    ):
+                        user.current_trusts_level = next_section
+                        user.save()
+
+            # WILLS_LEVEL
+            wills_level = Level.objects.filter(name=LevelNames.WILLS_LEVEL).first()
+            if wills_level and wills_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=wills_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_wills_level is None or (
+                        next_section
+                        and user.current_wills_level.order < next_section.order
+                    ):
+                        user.current_wills_level = next_section
+                        user.save()
+
+            # SEC_TRANS_LEVEL
+            sec_trans_level = Level.objects.filter(
+                name=LevelNames.SEC_TRANS_LEVEL
+            ).first()
+            if sec_trans_level and sec_trans_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=sec_trans_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_sec_trans_level is None or (
+                        next_section
+                        and user.current_sec_trans_level.order < next_section.order
+                    ):
+                        user.current_sec_trans_level = next_section
+                        user.save()
             return JsonResponse(serializer.validated_data)
         else:
             return JsonResponse(serializer.errors)

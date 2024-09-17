@@ -81,6 +81,113 @@ def fill_up_profile(user: User):
         )
         user.current_mpre_drill = start_mpre_section
         print(f"User {user} has been assigned to MPRE_DRILLS.")
+
+    # AGENCY_LEVEL
+    agency_level = Level.objects.filter(name=LevelNames.AGENCY_LEVEL).first()
+    if agency_level and user.current_agency_level is None:
+        start_agency_section = (
+            Section.objects.filter(
+                level=agency_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_agency_level = start_agency_section
+        print(f"User {user} has been assigned to AGENCY_LEVEL.")
+
+    # PARTNERSHIPS_LEVEL
+    partnerships_level = Level.objects.filter(
+        name=LevelNames.PARTNERSHIPS_LEVEL
+    ).first()
+    if partnerships_level and user.current_partnerships_level is None:
+        start_partnerships_section = (
+            Section.objects.filter(
+                level=partnerships_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_partnerships_level = start_partnerships_section
+        print(f"User {user} has been assigned to PARTNERSHIPS_LEVEL.")
+
+    # CORPS_LEVEL
+    corps_level = Level.objects.filter(name=LevelNames.CORPS_LEVEL).first()
+    if corps_level and user.current_corps_level is None:
+        start_corps_section = (
+            Section.objects.filter(
+                level=corps_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_corps_level = start_corps_section
+        print(f"User {user} has been assigned to CORPS_LEVEL.")
+
+    # CONFLICTS_LEVEL
+    conflicts_level = Level.objects.filter(name=LevelNames.CONFLICTS_LEVEL).first()
+    if conflicts_level and user.current_conflicts_level is None:
+        start_conflicts_section = (
+            Section.objects.filter(
+                level=conflicts_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_conflicts_level = start_conflicts_section
+        print(f"User {user} has been assigned to CONFLICTS_LEVEL.")
+
+    # FAM_LAW_LEVEL
+    fam_law_level = Level.objects.filter(name=LevelNames.FAM_LAW_LEVEL).first()
+    if fam_law_level and user.current_fam_law_level is None:
+        start_fam_law_section = (
+            Section.objects.filter(
+                level=fam_law_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_fam_law_level = start_fam_law_section
+        print(f"User {user} has been assigned to FAM_LAW_LEVEL.")
+
+    # TRUSTS_LEVEL
+    trusts_level = Level.objects.filter(name=LevelNames.TRUSTS_LEVEL).first()
+    if trusts_level and user.current_trusts_level is None:
+        start_trusts_section = (
+            Section.objects.filter(
+                level=trusts_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_trusts_level = start_trusts_section
+        print(f"User {user} has been assigned to TRUSTS_LEVEL.")
+
+    # WILLS_LEVEL
+    wills_level = Level.objects.filter(name=LevelNames.WILLS_LEVEL).first()
+    if wills_level and user.current_wills_level is None:
+        start_wills_section = (
+            Section.objects.filter(
+                level=wills_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_wills_level = start_wills_section
+        print(f"User {user} has been assigned to WILLS_LEVEL.")
+
+    # SEC_TRANS_LEVEL
+    sec_trans_level = Level.objects.filter(name=LevelNames.SEC_TRANS_LEVEL).first()
+    if sec_trans_level and user.current_sec_trans_level is None:
+        start_wills_section = (
+            Section.objects.filter(
+                level=sec_trans_level,
+            )
+            .order_by("order")
+            .first()
+        )
+        user.current_sec_trans_level = start_wills_section
+        print(f"User {user} has been assigned to SEC_TRANS_LEVEL.")
+
     user.save()
 
 

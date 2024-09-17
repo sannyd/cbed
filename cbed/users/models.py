@@ -60,6 +60,71 @@ class User(AbstractUser):
         limit_choices_to={"level__name": LevelNames.MPRE_DRILLS},
         related_name="current_mpre_drill",
     )
+    current_agency_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.AGENCY_LEVEL},
+        related_name="current_agency_level",
+    )
+    current_partnerships_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.PARTNERSHIPS_LEVEL},
+        related_name="current_partnerships_level",
+    )
+    current_corps_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.CORPS_LEVEL},
+        related_name="current_corps_level",
+    )
+    current_conflicts_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.CONFLICTS_LEVEL},
+        related_name="current_conflicts_level",
+    )
+
+    current_fam_law_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.FAM_LAW_LEVEL},
+        related_name="current_fam_law_level",
+    )
+    current_trusts_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.TRUSTS_LEVEL},
+        related_name="current_trusts_level",
+    )
+    current_wills_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.WILLS_LEVEL},
+        related_name="current_wills_level",
+    )
+    current_sec_trans_level = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.SEC_TRANS_LEVEL},
+        related_name="current_sec_trans_level",
+    )
     is_unlock_essay_pt = BooleanField(default=False)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
