@@ -89,5 +89,7 @@ class Result(TimeStampedModel):
 
 
 class Config(TimeStampedModel):
+    name = models.CharField(max_length=255, unique=True, default="")
     is_enable_login = models.BooleanField(default=True)
     is_enable_delete_account = models.BooleanField(default=True)
+    is_default = models.BooleanField(default=False)

@@ -6,7 +6,7 @@ from cbed.main.views import (
     LevelViewSet,
     ScoreBoardView,
     SectionViewSet,
-    GlobalConfigView,
+    GlobalConfigView, AllGlobalConfigView,
 )
 from cbed.users.api.views import PurchaseView, UserViewSet
 
@@ -24,4 +24,5 @@ urlpatterns = router.urls + [
     path("purchase", PurchaseView.as_view()),
     path("scoreboard", ScoreBoardView.as_view()),
     path("config", GlobalConfigView.as_view()),
+    path("all-config", AllGlobalConfigView.as_view()),
 ]

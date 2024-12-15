@@ -72,4 +72,4 @@ class ResultAdmin(admin.ModelAdmin):
 
 @admin.register(Config)
 class ConfigAdmin(admin.ModelAdmin):
-    list_display = ("is_enable_login", "is_enable_delete_account")
+    list_display = ("id","name","is_enable_login", "is_enable_delete_account", "is_default")
