@@ -1,3 +1,4 @@
+from IPython.testing.tools import default_config
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
@@ -375,10 +376,35 @@ class GlobalConfigView(RetrieveAPIView):
     authentication_classes = []
 
     def get(self, request, *args, **kwargs):
-        config = Config.objects.first() or Config.objects.create()
+        default_config = Config.objects.filter(
+            is_default=True
+        ).first()
+        if not default_config:
+            default_config = Config.objects.create(
+                name="default config",
+                is_enable_login=True,
+                is_enable_delete_account=True,
+                is_default=True,
+            )
         return JsonResponse(
             {
+                "name": default_config.name,
+                "is_enable_login": default_config.is_enable_login,
+                "is_enable_delete_account": default_config.is_enable_delete_account,
+            }
+        )
+class AllGlobalConfigView(RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    def get(self, request, *args, **kwargs):
+        queryset = Config.objects.all()
+        return JsonResponse([
+            {
+                "name": config.name,
                 "is_enable_login": config.is_enable_login,
                 "is_enable_delete_account": config.is_enable_delete_account,
+                "is_default": config.is_default,
             }
+            for config in queryset
+        ], safe=False
         )
