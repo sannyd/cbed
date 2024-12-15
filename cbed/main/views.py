@@ -1,4 +1,3 @@
-from IPython.testing.tools import default_config
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
