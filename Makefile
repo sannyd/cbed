@@ -30,7 +30,7 @@ prod-migrate:
 prod-up:
 	docker compose -f production.yml up -d --build
 	docker compose -f production.yml run --rm django python manage.py migrate
-	docker compose -f production.yml run --rm django python manage.py fill_users_drill
+	#docker compose -f production.yml run --rm django python manage.py fill_users_drill
 
 prod-down:
 	docker compose -f production.yml down
