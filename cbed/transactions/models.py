@@ -14,3 +14,8 @@ class Transaction(TimeStampedModel):
     product = models.CharField(max_length=128, choices=MemberPlanChoices.choices)
     ref = models.CharField(max_length=512, unique=True)
     info = models.TextField()
+
+class AppStoreRawTransaction(TimeStampedModel):
+    uuid = models.CharField(max_length=128, unique=True)
+    json = models.JSONField()
+    raw = models.TextField()
