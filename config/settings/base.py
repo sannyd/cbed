@@ -70,7 +70,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     # "allauth.socialaccount",
-    # "django_celery_beat",
+    "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -334,6 +334,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
-BUNDLE_ID = "com.barexamdrills.appx"
+BUNDLE_ID = "com.barexamdrills.app"
 AUTO_RETRY_WRONG_ENV_REQUEST = True
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
