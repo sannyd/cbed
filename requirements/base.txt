@@ -33,3 +33,4 @@ django-better-admin-arrayfield==1.4.2
 django-phonenumber-field[phonenumbers]
 pandas==1.2.5
 inapppy
+app-store-server-library

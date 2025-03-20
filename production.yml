@@ -53,17 +53,20 @@ services:
   redis:
     image: redis:5.0
     restart: unless-stopped
-#  celeryworker:
-#    <<: *django
-#    image: cbed_production_celeryworker
-#    command: /start-celeryworker
-#
-#  celerybeat:
-#    <<: *django
-#    image: cbed_production_celerybeat
-#    command: /start-celerybeat
-#
-#  flower:
-#    <<: *django
-#    image: cbed_production_flower
-#    command: /start-flower
+
+  celeryworker:
+    <<: *django
+    image: cbed_production_celeryworker
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: cbed_production_celerybeat
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: cbed_production_flower
+    command: /start-flower
+    ports:
+      - "5556:5555"
