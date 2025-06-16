@@ -26,19 +26,19 @@ environment = Environment.PRODUCTION
 client = AppStoreServerAPIClient(private_key_raw_string, key_id, issuer_id, bundle_id, environment)
 
 # response = client.request_test_notification()
-response = client.get_test_notification_status("fa2f0879-9adc-4ada-adcd-d38c0ab42805_1742490273151")
-# print(response)
-jwt_payload = response.signedPayload
-# read JWT
-payload = jwt_payload.split(".")[1]
-print(payload)
-json_payload = base64.b64decode(payload + "==").decode("utf-8")
-print(json_payload)
-# response = client.get_notification_history(None,
-# NotificationHistoryRequest(
-# startDate=int((datetime.now() - timedelta(days=1)).timestamp())*1000,
-# endDate=int((datetime.now()).timestamp())*1000,
-# )
-# )
-# print(response)
+# response = client.get_test_notification_status("fa2f0879-9adc-4ada-adcd-d38c0ab42805_1742490273151")
+# # print(response)
+# jwt_payload = response.signedPayload
+# # read JWT
+# payload = jwt_payload.split(".")[1]
+# print(payload)
+# json_payload = base64.b64decode(payload + "==").decode("utf-8")
+# print(json_payload)
+response = client.get_notification_history(None,
+NotificationHistoryRequest(
+startDate=int((datetime.now() - timedelta(days=10)).timestamp())*1000,
+endDate=int((datetime.now()).timestamp())*1000,
+)
+)
+print(response.notificationHistory[0].signedPayload)
 # read JWT

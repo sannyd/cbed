@@ -8,7 +8,7 @@ from appstoreserverlibrary.models.NotificationHistoryRequest import Notification
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 
-from cbed.transactions.models import AppStoreRawTransaction
+from cbed.transactions.models import AppStoreRawTransaction, Transaction
 
 private_key_raw_string = b"""-----BEGIN PRIVATE KEY-----
 MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg7EjcmwITAhcZIY+A
@@ -55,3 +55,21 @@ class TransactionService:
             count += 1
 
         return f"Synced {count} transactions"
+
+    @classmethod
+    def check_refund_state(cls):
+        count = 0
+        for raw_transaction in AppStoreRawTransaction.objects.filter(
+                json__contains={"notificationType": "REFUND"}
+        ):
+            tx_info_b64 = raw_transaction.json['data']['signedTransactionInfo'].split(".")[1]
+            tx_info = base64.b64decode(tx_info_b64 + "==").decode("utf-8")
+            tx_info_json = json.loads(tx_info)
+            originalTransactionId= tx_info_json['originalTransactionId']
+            transaction = Transaction.objects.filter(ref=originalTransactionId).first()
+            if transaction:
+                transaction.is_refunded = True
+                transaction.save()
+                count += 1
+
+        return f"Checked {count} refunds"

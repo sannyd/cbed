@@ -14,6 +14,7 @@ class Transaction(TimeStampedModel):
     product = models.CharField(max_length=128, choices=MemberPlanChoices.choices)
     ref = models.CharField(max_length=512, unique=True)
     info = models.TextField()
+    is_refunded = models.BooleanField(default=False)
 
 class AppStoreRawTransaction(TimeStampedModel):
     uuid = models.CharField(max_length=128, unique=True)
