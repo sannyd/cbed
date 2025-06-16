@@ -220,3 +220,4 @@ class HighScoreResultSerializer(serializers.Serializer):
     baby_bar_oct = HighScoreUserDetail(many=True)
     pro_bar_feb = HighScoreUserDetail(many=True)
     pro_bar_july = HighScoreUserDetail(many=True)
+    tutor = HighScoreUserDetail(many=True)

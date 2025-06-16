@@ -19,6 +19,7 @@ class UserAdmin(auth_admin.UserAdmin):
                 "fields": (
                     "username",
                     "password",
+                    "is_tutor",
                     "member_plan",
                     "current_mbe_section",
                     "current_fl_mcq_drill",
@@ -54,10 +55,11 @@ class UserAdmin(auth_admin.UserAdmin):
     list_display = [
         "username",
         "is_active",
+        "is_tutor",
         "member_plan",
         "membership",
         "last_login",
     ]
-    list_filter = ["is_staff", "member_plan", "is_superuser", "is_active", "groups"]
+    list_filter = ["is_staff", "is_tutor", "member_plan", "is_superuser", "is_active", "groups"]
 
     search_fields = ["name", "email", "username"]

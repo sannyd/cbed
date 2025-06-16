@@ -128,6 +128,7 @@ class User(AbstractUser):
     is_unlock_essay_pt = BooleanField(default=False)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
+    is_tutor = BooleanField(default=False)
 
     @property
     def member_plan_simple(self):
