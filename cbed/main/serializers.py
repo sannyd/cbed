@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework.fields import BooleanField
 
 from cbed.main.consts import LevelNames
-from cbed.main.models import Answer, Level, Question, Result, Section
+from cbed.main.models import Answer, Level, Question, Result, Section, SubscriptionPlan
 from cbed.users.models import User
 
 
@@ -221,3 +221,8 @@ class HighScoreResultSerializer(serializers.Serializer):
     pro_bar_feb = HighScoreUserDetail(many=True)
     pro_bar_july = HighScoreUserDetail(many=True)
     tutor = HighScoreUserDetail(many=True)
+
+class SubscriptionPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubscriptionPlan
+        fields = ["id", "name", "price"]

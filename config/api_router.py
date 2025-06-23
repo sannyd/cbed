@@ -6,7 +6,7 @@ from cbed.main.views import (
     LevelViewSet,
     ScoreBoardView,
     SectionViewSet,
-    GlobalConfigView, AllGlobalConfigView,
+    GlobalConfigView, AllGlobalConfigView, SubscriptionPlanViewSet,
 )
 from cbed.users.api.views import PurchaseView, UserViewSet
 
@@ -18,6 +18,7 @@ else:
 router.register("profile", UserViewSet)
 router.register("levels", LevelViewSet)
 router.register("sections", SectionViewSet)
+router.register("subscription-plan", SubscriptionPlanViewSet)
 
 app_name = "api"
 urlpatterns = router.urls + [

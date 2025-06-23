@@ -9,14 +9,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
 from cbed.main.consts import LevelNames
-from cbed.main.models import Level, Question, Result, Section, Config
+from cbed.main.models import Level, Question, Result, Section, Config, SubscriptionPlan
 from cbed.main.serializers import (
     HighScoreResultSerializer,
     HighScoreUserDetail,
     LevelSerializer,
     ResultSerializer,
     SectionDetailSerializer,
-    SectionSearchSerializer,
+    SectionSearchSerializer, SubscriptionPlanSerializer,
 )
 from cbed.transactions.enums import MemberPlanChoices
 from cbed.users.models import User
@@ -413,3 +413,9 @@ class AllGlobalConfigView(RetrieveAPIView):
             for config in queryset
         ], safe=False
         )
+
+
+class SubscriptionPlanViewSet(ReadOnlyModelViewSet):
+    queryset = SubscriptionPlan.objects.all()
+    serializer_class = SubscriptionPlanSerializer
+
