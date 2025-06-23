@@ -18,7 +18,7 @@ else:
 router.register("profile", UserViewSet)
 router.register("levels", LevelViewSet)
 router.register("sections", SectionViewSet)
-router.register("subscription-plan", SubscriptionPlanViewSet)
+router.register("subscription-plans", SubscriptionPlanViewSet)
 
 app_name = "api"
 urlpatterns = router.urls + [
