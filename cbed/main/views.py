@@ -418,4 +418,5 @@ class AllGlobalConfigView(RetrieveAPIView):
 class SubscriptionPlanViewSet(ReadOnlyModelViewSet):
     queryset = SubscriptionPlan.objects.all()
     serializer_class = SubscriptionPlanSerializer
-
+    permission_classes = []
+    authentication_classes = []
