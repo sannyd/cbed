@@ -41,6 +41,8 @@ class UserUpdateInfoSerializer(serializers.ModelSerializer):
             "name",
             "state",
             "phone_number",
+            "essay_count",
+            "mpt_count",
         ]
 
 
