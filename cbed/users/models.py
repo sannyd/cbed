@@ -6,7 +6,7 @@ from django.db.models import (
     DateTimeField,
     ForeignKey,
     ImageField,
-    Sum,
+    Sum, IntegerField,
 )
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -129,6 +129,8 @@ class User(AbstractUser):
     first_name = None  # type: ignore
     last_name = None  # type: ignore
     is_tutor = BooleanField(default=False)
+    essay_count = IntegerField(default=0)
+    mpt_count = IntegerField(default=0)
 
     @property
     def member_plan_simple(self):

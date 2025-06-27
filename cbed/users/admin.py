@@ -20,6 +20,8 @@ class UserAdmin(auth_admin.UserAdmin):
                     "username",
                     "password",
                     "is_tutor",
+                    "essay_count",
+                    "mpt_count",
                     "member_plan",
                     "current_mbe_section",
                     "current_fl_mcq_drill",

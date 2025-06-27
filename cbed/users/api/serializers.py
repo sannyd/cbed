@@ -27,6 +27,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "membership",
             "last_section_name",
             "points",
+            "is_tutor",
+            "essay_count",
+            "mpt_count",
         ]
 
 
