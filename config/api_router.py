@@ -4,8 +4,10 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from cbed.main.views import (
     LevelViewSet,
-    ScoreBoardView,
-    ScoreBoardV11View,
+    # iOS 11.0 scoreboard (legacy, shipped; uses is_tutor flag)
+    ScoreBoardV110View,
+    # iOS 11.1 scoreboard (new; uses is_tutor_for_bed flag)
+    ScoreBoardV111View,
     SectionViewSet,
     GlobalConfigView, AllGlobalConfigView, SubscriptionPlanViewSet,
 )
@@ -24,8 +26,10 @@ router.register("subscription-plans", SubscriptionPlanViewSet)
 app_name = "api"
 urlpatterns = router.urls + [
     path("purchase", PurchaseView.as_view()),
-    path("scoreboard", ScoreBoardView.as_view()),
-    path("scoreboard-v11", ScoreBoardV11View.as_view()),
+    # iOS 11.0 scoreboard (legacy) — backed by is_tutor
+    path("scoreboard", ScoreBoardV110View.as_view()),
+    # iOS 11.1 scoreboard (new in 11.1) — backed by is_tutor_for_bed
+    path("scoreboard-111", ScoreBoardV111View.as_view()),
     path("config", GlobalConfigView.as_view()),
     path("all-config", AllGlobalConfigView.as_view()),
 ]

@@ -527,7 +527,16 @@ class SectionViewSet(ReadOnlyModelViewSet):
             return JsonResponse(serializer.errors)
 
 
-class ScoreBoardView(RetrieveAPIView):
+class ScoreBoardV110View(RetrieveAPIView):
+    """iOS 11.0 scoreboard (legacy). Served at `/api/scoreboard`.
+
+    SHIPPED in iOS 11.0 — currently live in the App Store. Backed by the
+    legacy `is_tutor` flag (NOT the newer `is_tutor_for_bed`). Cannot be
+    removed until the iOS 11.0 install base drops to zero.
+
+    Pair: iOS 11.0 app → ScoreboardRouter.swift path "/scoreboard"
+          → this view → uses `Q(is_tutor=True)`
+    """
     queryset = User.objects.order_by("-current_mbe_section__order")
     serializer_class = HighScoreResultSerializer
 
@@ -568,16 +577,27 @@ class ScoreBoardView(RetrieveAPIView):
         )
 
 
-class ScoreBoardV11View(RetrieveAPIView):
-    """Version 11.1 Scoreboard.
+class ScoreBoardV111View(RetrieveAPIView):
+    """iOS 11.1 scoreboard. Served at `/api/scoreboard-111`.
 
-    Differences from ScoreBoardView (v11.0):
-    - Each leaderboard bucket excludes users flagged `is_tutor_for_bed=True`
-      (the canonical tutor flag since 2026-09-15) so tutors never appear
-      in any student ranking.
-    - The `tutor` bucket includes only users with `is_tutor_for_bed=True`.
-      The legacy `is_tutor` flag is ignored here to give the iOS Tutors
-      sheet a single source of truth.
+    New with iOS 11.1 release. Backed by the canonical tutor flag
+    `is_tutor_for_bed` (instead of the legacy `is_tutor`), so students
+    who happen to have `is_tutor=True` (e.g. as part of a tutoring
+    package) no longer appear in the `tutor` bucket or in any student
+    leaderboard rank.
+
+    Pair: iOS 11.1 app → ScoreboardRouter.swift path "/scoreboard-111"
+          → this view → uses `Q(is_tutor_for_bed=True)` for tutors
+          and `Q(is_tutor_for_bed=False)` for student buckets
+
+    Differences from `ScoreBoardV110View` (iOS 11.0 legacy):
+    - Each leaderboard bucket excludes users flagged `is_tutor_for_bed=True`,
+      NOT just `is_tutor=False`. This ensures the new tutor flag (which can
+      be true even when `is_tutor` is false) keeps tutors out of rankings.
+    - The `tutor` bucket now includes only users with `is_tutor_for_bed=True`
+      (4 users today: San, Crystal, Niya, Mentor Ariana). The legacy
+      `is_tutor` flag is ignored here to give the iOS Tutors sheet a
+      single source of truth.
     """
     queryset = User.objects.order_by("-current_mbe_section__order")
     serializer_class = HighScoreResultSerializer
