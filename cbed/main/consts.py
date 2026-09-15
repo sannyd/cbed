@@ -6,6 +6,8 @@ class LevelNames(str, Enum):
     FL_MCQ_DRILLS = "FL MCQ Drills"
     CA_MCQ_DRILLS = "CA MCQ Drills"
     MPRE_DRILLS = "MPRE Drills"
+    NG_MCQ_1_CHOICE = "NG 1-Choice MCQ"
+    NG_MCQ_2_CHOICE = "NG 2-Choice MCQ"
     # Agency
     AGENCY_LEVEL = "Agency"
     # Partnerships
@@ -22,3 +24,13 @@ class LevelNames(str, Enum):
     WILLS_LEVEL = "Wills"
     # Sec Trans
     SEC_TRANS_LEVEL = "Sec Trans"
+    # IQS Drafting Sets
+    DRAFTING_SETS = "Drafting Sets"
+    # IQS Counseling Sets
+    COUNSELING_SETS = "Counseling Sets"
+    # Standard Performance Tasks
+    STANDARD_PERF_TASKS = "Standard Perf Tasks"
+    # Long-Run Performance Tasks (LRPT)
+    LRPTS = "LRPTs"
+    # Mixed MBE Sets
+    MIXED_MBE_SETS = "Mixed MBE Sets"
