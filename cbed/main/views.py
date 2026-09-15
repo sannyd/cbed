@@ -572,51 +572,51 @@ class ScoreBoardV11View(RetrieveAPIView):
     """Version 11.1 Scoreboard.
 
     Differences from ScoreBoardView (v11.0):
-    - Each leaderboard bucket also excludes users flagged `is_tutor_for_bed=True`
-      so the 5 conceptual tutors (San, Crystal, Niya, Mentor Ariana + Vanessa)
-      never appear in any student ranking.
-    - The `tutor` bucket now includes users with `is_tutor=True OR
-      is_tutor_for_bed=True` so the iOS Tutors sheet can show all of them
-      regardless of which flag the user happened to be set with.
+    - Each leaderboard bucket excludes users flagged `is_tutor_for_bed=True`
+      (the canonical tutor flag since 2026-09-15) so tutors never appear
+      in any student ranking.
+    - The `tutor` bucket includes only users with `is_tutor_for_bed=True`.
+      The legacy `is_tutor` flag is ignored here to give the iOS Tutors
+      sheet a single source of truth.
     """
     queryset = User.objects.order_by("-current_mbe_section__order")
     serializer_class = HighScoreResultSerializer
 
     def get(self, request, *args, **kwargs):
-        not_a_tutor = Q(is_tutor=False) & Q(is_tutor_for_bed=False)
+        not_a_tutor = Q(is_tutor_for_bed=False)
         return JsonResponse(
             {
                 "baby_bar_june": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.BABY_BAR_JUNE,
-                        is_tutor=False, is_tutor_for_bed=False,
+                        is_tutor_for_bed=False,
                     ),
                     many=True,
                 ).data,
                 "baby_bar_oct": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.BABY_BAR_OCT,
-                        is_tutor=False, is_tutor_for_bed=False,
+                        is_tutor_for_bed=False,
                     ),
                     many=True,
                 ).data,
                 "pro_bar_feb": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.PRO_BAR_FEB,
-                        is_tutor=False, is_tutor_for_bed=False,
+                        is_tutor_for_bed=False,
                     ),
                     many=True,
                 ).data,
                 "pro_bar_july": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.PRO_BAR_JULY,
-                        is_tutor=False, is_tutor_for_bed=False,
+                        is_tutor_for_bed=False,
                     ),
                     many=True,
                 ).data,
                 "tutor": HighScoreUserDetail(
                     instance=self.queryset.filter(
-                        Q(is_tutor=True) | Q(is_tutor_for_bed=True)
+                        Q(is_tutor_for_bed=True)
                     ),
                     many=True,
                 ).data,
