@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.db.models import Q
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import action
@@ -172,6 +173,47 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     ):
                         user.current_ca_mcq_drill = next_section
                         user.save()
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=ca_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_ca_mcq_drill = start_level_section
+                        user.save()
+
+            ng_level = Level.objects.filter(name=LevelNames.NG_MCQ_1_CHOICE).first()
+            if ng_level and ng_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=ng_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_ng_mcq_1_choice_section is None or (
+                        next_section
+                        and user.current_ng_mcq_1_choice_section.order < next_section.order
+                    ):
+                        user.current_ng_mcq_1_choice_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=ng_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_ng_mcq_1_choice_section = start_level_section
+                        user.save()
             # MPRE_DRILLS
             mpre_level = Level.objects.filter(name=LevelNames.MPRE_DRILLS).first()
             if mpre_level and mpre_level == section.level:
@@ -330,6 +372,156 @@ class SectionViewSet(ReadOnlyModelViewSet):
                     ):
                         user.current_sec_trans_level = next_section
                         user.save()
+
+            # DRAFTING_SETS (level 31)
+            drafting_level = Level.objects.filter(name=LevelNames.DRAFTING_SETS).first()
+            if drafting_level and drafting_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=drafting_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_drafting_section is None or (
+                        next_section
+                        and user.current_drafting_section.order < next_section.order
+                    ):
+                        user.current_drafting_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=drafting_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_drafting_section = start_level_section
+                        user.save()
+
+            # COUNSELING_SETS (level 33)
+            counseling_level = Level.objects.filter(name=LevelNames.COUNSELING_SETS).first()
+            if counseling_level and counseling_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=counseling_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_counseling_section is None or (
+                        next_section
+                        and user.current_counseling_section.order < next_section.order
+                    ):
+                        user.current_counseling_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=counseling_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_counseling_section = start_level_section
+                        user.save()
+
+            # STANDARD_PERF_TASKS (level 34)
+            spt_level = Level.objects.filter(name=LevelNames.STANDARD_PERF_TASKS).first()
+            if spt_level and spt_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=spt_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_ng_spt_section is None or (
+                        next_section
+                        and user.current_ng_spt_section.order < next_section.order
+                    ):
+                        user.current_ng_spt_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=spt_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_ng_spt_section = start_level_section
+                        user.save()
+
+            # LRPTS (level 35)
+            lrpt_level = Level.objects.filter(name=LevelNames.LRPTS).first()
+            if lrpt_level and lrpt_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=lrpt_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_ng_lrpt_section is None or (
+                        next_section
+                        and user.current_ng_lrpt_section.order < next_section.order
+                    ):
+                        user.current_ng_lrpt_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=lrpt_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_ng_lrpt_section = start_level_section
+                        user.save()
+
+            # MIXED_MBE_SETS (level 40)
+            mixed_mbe_level = Level.objects.filter(name=LevelNames.MIXED_MBE_SETS).first()
+            if mixed_mbe_level and mixed_mbe_level == section.level:
+                if result.grade >= 90:
+                    next_section = (
+                        self.get_queryset()
+                        .filter(level=mixed_mbe_level, order__gt=section.order)
+                        .order_by("order")
+                        .first()
+                    )
+                    if user.current_mixed_mbe_section is None or (
+                        next_section
+                        and user.current_mixed_mbe_section.order < next_section.order
+                    ):
+                        user.current_mixed_mbe_section = next_section
+                        user.save()
+
+                if result.grade < 30:
+                    start_level_section = (
+                        Section.objects.filter(
+                            level=mixed_mbe_level,
+                            order__lt=section.order,
+                        )
+                        .order_by("-order")
+                        .first()
+                    )
+                    if start_level_section:
+                        user.current_mixed_mbe_section = start_level_section
+                        user.save()
             return JsonResponse(serializer.validated_data)
         else:
             return JsonResponse(serializer.errors)
@@ -369,6 +561,62 @@ class ScoreBoardView(RetrieveAPIView):
                 "tutor": HighScoreUserDetail(
                     instance=self.queryset.filter(
                          is_tutor=True
+                    ),
+                    many=True,
+                ).data,
+            }
+        )
+
+
+class ScoreBoardV11View(RetrieveAPIView):
+    """Version 11.1 Scoreboard.
+
+    Differences from ScoreBoardView (v11.0):
+    - Each leaderboard bucket also excludes users flagged `is_tutor_for_bed=True`
+      so the 5 conceptual tutors (San, Crystal, Niya, Mentor Ariana + Vanessa)
+      never appear in any student ranking.
+    - The `tutor` bucket now includes users with `is_tutor=True OR
+      is_tutor_for_bed=True` so the iOS Tutors sheet can show all of them
+      regardless of which flag the user happened to be set with.
+    """
+    queryset = User.objects.order_by("-current_mbe_section__order")
+    serializer_class = HighScoreResultSerializer
+
+    def get(self, request, *args, **kwargs):
+        not_a_tutor = Q(is_tutor=False) & Q(is_tutor_for_bed=False)
+        return JsonResponse(
+            {
+                "baby_bar_june": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.BABY_BAR_JUNE,
+                        is_tutor=False, is_tutor_for_bed=False,
+                    ),
+                    many=True,
+                ).data,
+                "baby_bar_oct": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.BABY_BAR_OCT,
+                        is_tutor=False, is_tutor_for_bed=False,
+                    ),
+                    many=True,
+                ).data,
+                "pro_bar_feb": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.PRO_BAR_FEB,
+                        is_tutor=False, is_tutor_for_bed=False,
+                    ),
+                    many=True,
+                ).data,
+                "pro_bar_july": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        member_plan=MemberPlanChoices.PRO_BAR_JULY,
+                        is_tutor=False, is_tutor_for_bed=False,
+                    ),
+                    many=True,
+                ).data,
+                "tutor": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        Q(is_tutor=True) | Q(is_tutor_for_bed=True)
                     ),
                     many=True,
                 ).data,

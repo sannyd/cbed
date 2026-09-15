@@ -5,6 +5,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 from cbed.main.views import (
     LevelViewSet,
     ScoreBoardView,
+    ScoreBoardV11View,
     SectionViewSet,
     GlobalConfigView, AllGlobalConfigView, SubscriptionPlanViewSet,
 )
@@ -24,6 +25,7 @@ app_name = "api"
 urlpatterns = router.urls + [
     path("purchase", PurchaseView.as_view()),
     path("scoreboard", ScoreBoardView.as_view()),
+    path("scoreboard-v11", ScoreBoardV11View.as_view()),
     path("config", GlobalConfigView.as_view()),
     path("all-config", AllGlobalConfigView.as_view()),
 ]

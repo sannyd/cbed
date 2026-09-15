@@ -60,6 +60,69 @@ class User(AbstractUser):
         limit_choices_to={"level__name": LevelNames.MPRE_DRILLS},
         related_name="current_mpre_drill",
     )
+    current_ng_mcq_1_choice_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.NG_MCQ_1_CHOICE},
+        related_name="current_ng_mcq_1_choice_section",
+        db_column="current_ng_mcq_1_choice_section_id",
+    )
+    current_ng_mcq_2_choice_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.NG_MCQ_2_CHOICE},
+        related_name="current_ng_mcq_2_choice_section",
+        db_column="current_ng_mcq_2_choice_section_id",
+    )
+    current_drafting_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.DRAFTING_SETS},
+        related_name="current_drafting_section",
+        db_column="current_drafting_section_id",
+    )
+    current_counseling_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.COUNSELING_SETS},
+        related_name="current_counseling_section",
+        db_column="current_counseling_section_id",
+    )
+    current_ng_spt_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.STANDARD_PERF_TASKS},
+        related_name="current_ng_spt_section",
+        db_column="current_ng_spt_section_id",
+    )
+    current_ng_lrpt_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.LRPTS},
+        related_name="current_ng_lrpt_section",
+        db_column="current_ng_lrpt_section_id",
+    )
+    current_mixed_mbe_section = ForeignKey(
+        "main.Section",
+        blank=True,
+        null=True,
+        on_delete=SET_NULL,
+        limit_choices_to={"level__name": LevelNames.MIXED_MBE_SETS},
+        related_name="current_mixed_mbe_section",
+        db_column="current_mixed_mbe_section_id",
+    )
     current_agency_level = ForeignKey(
         "main.Section",
         blank=True,
@@ -129,6 +192,7 @@ class User(AbstractUser):
     first_name = None  # type: ignore
     last_name = None  # type: ignore
     is_tutor = BooleanField(default=False)
+    is_tutor_for_bed = BooleanField(default=False)
     essay_count = IntegerField(default=0)
     mpt_count = IntegerField(default=0)
 
