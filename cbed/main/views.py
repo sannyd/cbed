@@ -604,12 +604,14 @@ class ScoreBoardV111View(RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         not_a_tutor = Q(is_tutor_for_bed=False)
+        not_email_zoom = Q(is_tutor=False)  # Email & Zoom students get their own bucket
         return JsonResponse(
             {
                 "baby_bar_june": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.BABY_BAR_JUNE,
                         is_tutor_for_bed=False,
+                        is_tutor=False,
                     ),
                     many=True,
                 ).data,
@@ -617,6 +619,7 @@ class ScoreBoardV111View(RetrieveAPIView):
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.BABY_BAR_OCT,
                         is_tutor_for_bed=False,
+                        is_tutor=False,
                     ),
                     many=True,
                 ).data,
@@ -624,12 +627,26 @@ class ScoreBoardV111View(RetrieveAPIView):
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.PRO_BAR_FEB,
                         is_tutor_for_bed=False,
+                        is_tutor=False,
                     ),
                     many=True,
                 ).data,
                 "pro_bar_july": HighScoreUserDetail(
                     instance=self.queryset.filter(
                         member_plan=MemberPlanChoices.PRO_BAR_JULY,
+                        is_tutor_for_bed=False,
+                        is_tutor=False,
+                    ),
+                    many=True,
+                ).data,
+                # Email & Zoom cohort: students with the Email & Zoom package flag
+                # (`is_tutor=True`). Excludes actual tutors (`is_tutor_for_bed=True`)
+                # since they go in the Tutors modal. Renders on its own tab in iOS
+                # 11.1; previously these students appeared in their member-plan
+                # bucket, which obscured their Email & Zoom status.
+                "email_zoom": HighScoreUserDetail(
+                    instance=self.queryset.filter(
+                        is_tutor=True,
                         is_tutor_for_bed=False,
                     ),
                     many=True,

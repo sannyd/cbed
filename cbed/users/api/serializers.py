@@ -14,6 +14,26 @@ User = get_user_model()
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    current_mixed_mbe_section_id = serializers.IntegerField(read_only=True)
+    # Per-section NextGen FK ids. Each names the user's current section in
+    # that pipeline; the iOS scoreboard reads them when a non-MBE chip is
+    # selected so each row's level label matches the chip's subject.
+    # The wire names match `current_<section>` (no `_id` suffix), matching
+    # the legacy ProfileInfoM contract in the iOS app.
+    current_drafting_section = serializers.IntegerField(
+        source="current_drafting_section_id", read_only=True)
+    current_counseling_section = serializers.IntegerField(
+        source="current_counseling_section_id", read_only=True)
+    current_ng_spt_section = serializers.IntegerField(
+        source="current_ng_spt_section_id", read_only=True)
+    current_ng_lrpt_section = serializers.IntegerField(
+        source="current_ng_lrpt_section_id", read_only=True)
+    # NG MCQ sections already come through these names on ProfileInfoM
+    # natively (the FK columns are listed in fields).
+    # Email & Zoom package flag (alias for `is_tutor`). The iOS Settings
+    # screen reads this to decide whether to expose essay/mpt counters.
+    is_email_zoom = serializers.BooleanField(source="is_tutor", read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -30,6 +50,14 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "is_tutor",
             "essay_count",
             "mpt_count",
+            "current_mixed_mbe_section_id",
+            "current_drafting_section",
+            "current_counseling_section",
+            "current_ng_spt_section",
+            "current_ng_lrpt_section",
+            "current_ng_mcq_1_choice_section_id",
+            "current_ng_mcq_2_choice_section_id",
+            "is_email_zoom",
         ]
 
 

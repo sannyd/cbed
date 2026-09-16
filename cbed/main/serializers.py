@@ -204,9 +204,26 @@ class LevelDetailSerializer(LevelSerializer):
 
 
 class HighScoreUserDetail(serializers.ModelSerializer):
+    # Per-section NextGen FK ids. The FK serializer natively exposes
+    # `<field>_id` columns from the underlying integer columns, but only
+    # when they're listed in `Meta.fields`. We list each explicitly here
+    # so the iOS leaderboard reads them for the per-chip display text.
+    #
+    # Email & Zoom package flag, alias for `is_tutor`. The iOS app reads
+    # this as `isEmailZoom` so the email-and-zoom tab can decide whether
+    # to show the essay/mpt counters on Settings.
+    is_email_zoom = serializers.BooleanField(source="is_tutor", read_only=True)
+
     class Meta:
         model = User
-        fields = ["id", "name", "avatar", "points", "last_section_name", "essay_count", "mpt_count"]
+        fields = [
+            "id", "name", "avatar", "points", "last_section_name",
+            "essay_count", "mpt_count",
+            "current_drafting_section_id", "current_counseling_section_id",
+            "current_ng_spt_section_id", "current_ng_lrpt_section_id",
+            "current_ng_mcq_1_choice_section_id", "current_ng_mcq_2_choice_section_id",
+            "is_email_zoom",
+        ]
 
 
 class HighScoreResultSerializer(serializers.Serializer):
@@ -220,6 +237,10 @@ class HighScoreResultSerializer(serializers.Serializer):
     baby_bar_oct = HighScoreUserDetail(many=True)
     pro_bar_feb = HighScoreUserDetail(many=True)
     pro_bar_july = HighScoreUserDetail(many=True)
+    # New for iOS 11.1: Email & Zoom cohort reuses the legacy `is_tutor`
+    # package flag. Excluded from member-plan buckets so the same users
+    # don't appear twice.
+    email_zoom = HighScoreUserDetail(many=True)
     tutor = HighScoreUserDetail(many=True)
 
 class SubscriptionPlanSerializer(serializers.ModelSerializer):
