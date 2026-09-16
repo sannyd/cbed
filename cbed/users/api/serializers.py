@@ -34,6 +34,39 @@ class UserInfoSerializer(serializers.ModelSerializer):
     # screen reads this to decide whether to expose essay/mpt counters.
     is_email_zoom = serializers.BooleanField(source="is_tutor", read_only=True)
 
+    # Resolved section names. Mirrors the per-section FK columns above:
+    # each SerializerMethodField reads the FK and pulls Section.name.
+    current_drafting_section_name = serializers.SerializerMethodField()
+    current_counseling_section_name = serializers.SerializerMethodField()
+    current_ng_spt_section_name = serializers.SerializerMethodField()
+    current_ng_lrpt_section_name = serializers.SerializerMethodField()
+    current_ng_mcq_1_choice_section_name = serializers.SerializerMethodField()
+    current_ng_mcq_2_choice_section_name = serializers.SerializerMethodField()
+
+    def _section_name(self, user, attr):
+        section = getattr(user, attr, None)
+        if section is None:
+            return None
+        return getattr(section, "name", None) or str(section)
+
+    def get_current_drafting_section_name(self, user):
+        return self._section_name(user, "current_drafting_section")
+
+    def get_current_counseling_section_name(self, user):
+        return self._section_name(user, "current_counseling_section")
+
+    def get_current_ng_spt_section_name(self, user):
+        return self._section_name(user, "current_ng_spt_section")
+
+    def get_current_ng_lrpt_section_name(self, user):
+        return self._section_name(user, "current_ng_lrpt_section")
+
+    def get_current_ng_mcq_1_choice_section_name(self, user):
+        return self._section_name(user, "current_ng_mcq_1_choice_section")
+
+    def get_current_ng_mcq_2_choice_section_name(self, user):
+        return self._section_name(user, "current_ng_mcq_2_choice_section")
+
     class Meta:
         model = User
         fields = [
@@ -57,6 +90,9 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "current_ng_lrpt_section",
             "current_ng_mcq_1_choice_section_id",
             "current_ng_mcq_2_choice_section_id",
+            "current_drafting_section_name", "current_counseling_section_name",
+            "current_ng_spt_section_name", "current_ng_lrpt_section_name",
+            "current_ng_mcq_1_choice_section_name", "current_ng_mcq_2_choice_section_name",
             "is_email_zoom",
         ]
 

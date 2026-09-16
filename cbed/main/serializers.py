@@ -214,6 +214,46 @@ class HighScoreUserDetail(serializers.ModelSerializer):
     # to show the essay/mpt counters on Settings.
     is_email_zoom = serializers.BooleanField(source="is_tutor", read_only=True)
 
+    # Resolved section names. Each reads its corresponding FK column
+    # (e.g. `current_drafting_section`) and pulls the related Section's
+    # `name` field (e.g. "Drafting Set 04") so the iOS leaderboard can
+    # render the actual curriculum title under each NextGen chip instead
+    # of the user's MBE level. Each is nullable so users who haven't
+    # started a module just render "Not started" in the iOS UI.
+    current_drafting_section_name = serializers.SerializerMethodField()
+    current_counseling_section_name = serializers.SerializerMethodField()
+    current_ng_spt_section_name = serializers.SerializerMethodField()
+    current_ng_lrpt_section_name = serializers.SerializerMethodField()
+    current_ng_mcq_1_choice_section_name = serializers.SerializerMethodField()
+    current_ng_mcq_2_choice_section_name = serializers.SerializerMethodField()
+
+    def _section_name(self, user, attr):
+        section = getattr(user, attr, None)
+        if section is None:
+            return None
+        # Section.__str__ is "name - level_name"; we want the bare name
+        # so the iOS row reads "Drafting Set 04" rather than the full
+        # verbose string.
+        return getattr(section, "name", None) or str(section)
+
+    def get_current_drafting_section_name(self, user):
+        return self._section_name(user, "current_drafting_section")
+
+    def get_current_counseling_section_name(self, user):
+        return self._section_name(user, "current_counseling_section")
+
+    def get_current_ng_spt_section_name(self, user):
+        return self._section_name(user, "current_ng_spt_section")
+
+    def get_current_ng_lrpt_section_name(self, user):
+        return self._section_name(user, "current_ng_lrpt_section")
+
+    def get_current_ng_mcq_1_choice_section_name(self, user):
+        return self._section_name(user, "current_ng_mcq_1_choice_section")
+
+    def get_current_ng_mcq_2_choice_section_name(self, user):
+        return self._section_name(user, "current_ng_mcq_2_choice_section")
+
     class Meta:
         model = User
         fields = [
@@ -222,6 +262,9 @@ class HighScoreUserDetail(serializers.ModelSerializer):
             "current_drafting_section_id", "current_counseling_section_id",
             "current_ng_spt_section_id", "current_ng_lrpt_section_id",
             "current_ng_mcq_1_choice_section_id", "current_ng_mcq_2_choice_section_id",
+            "current_drafting_section_name", "current_counseling_section_name",
+            "current_ng_spt_section_name", "current_ng_lrpt_section_name",
+            "current_ng_mcq_1_choice_section_name", "current_ng_mcq_2_choice_section_name",
             "is_email_zoom",
         ]
 
