@@ -25,9 +25,9 @@ class LevelNames(str, Enum):
     # Sec Trans
     SEC_TRANS_LEVEL = "Sec Trans"
     # IQS Drafting Sets
-    DRAFTING_SETS = "Drafting Sets"
+    DRAFTING_SETS = "IQS Drafting Sets"
     # IQS Counseling Sets
-    COUNSELING_SETS = "Counseling Sets"
+    COUNSELING_SETS = "IQS Counseling Sets"
     # Standard Performance Tasks
     STANDARD_PERF_TASKS = "Standard Perf Tasks"
     # Long-Run Performance Tasks (LRPT)
