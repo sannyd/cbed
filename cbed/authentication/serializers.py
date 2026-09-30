@@ -188,7 +188,42 @@ def fill_up_profile(user: User):
         user.current_sec_trans_level = start_wills_section
         print(f"User {user} has been assigned to SEC_TRANS_LEVEL.")
 
-    user.save()
+        # ═══════════════════════════════════════════════════════════════
+        # LEVEL 1 PIPELINE DEFAULTS (IQS Counseling, IQS Drafting, NG SPT,
+        # NG LRPT, Mixed MBE). Hardcoded section IDs match the constants
+        # used in the backfill SQL; fall back to dynamic Level lookup if a
+        # specific section is missing (e.g. removed).
+        # ═══════════════════════════════════════════════════════════════
+        _level1_defaults = [
+            ("current_mixed_mbe_section", 55001, LevelNames.MIXED_MBE_SETS, "MIXED_MBE"),
+            ("current_drafting_section",   50001, LevelNames.DRAFTING_SETS,   "DRAFTING"),
+            ("current_counseling_section", 51001, LevelNames.COUNSELING_SETS, "COUNSELING"),
+            ("current_ng_spt_section",     53001, LevelNames.STANDARD_PERF_TASKS, "NG_SPT"),
+            ("current_ng_lrpt_section",    54001, LevelNames.LRPTS,           "NG_LRPT"),
+        ]
+        for attr, hardcoded_id, level_name, label in _level1_defaults:
+            if getattr(user, attr) is not None:
+                continue
+            specific = Section.objects.filter(id=hardcoded_id).first()
+            if specific is not None:
+                setattr(user, attr, specific)
+                print(f"User {user} has been assigned to {label} (id={hardcoded_id}).")
+            else:
+                level = Level.objects.filter(name=level_name).first()
+                if level:
+                    fallback = (
+                        Section.objects.filter(level=level)
+                        .order_by("order")
+                        .first()
+                    )
+                    if fallback:
+                        setattr(user, attr, fallback)
+                        print(
+                            f"User {user} has been assigned to {label} "
+                            f"(fallback id={fallback.id})."
+                        )
+
+        user.save()
 
 
 class AppSerializer(Serializer):
