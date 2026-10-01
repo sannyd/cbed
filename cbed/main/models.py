@@ -83,18 +83,6 @@ class Result(TimeStampedModel):
     correct = models.IntegerField(default=0)
     total = models.IntegerField(default=1, validators=[MinValueValidator(1)])
 
-    # GeoIP capture (added 2026-10-01). All optional — never block quiz save.
-    client_ip = models.GenericIPAddressField(null=True, blank=True, default=None)
-    geo_city = models.CharField(max_length=255, blank=True, default="")
-    geo_region = models.CharField(max_length=255, blank=True, default="")
-    geo_country = models.CharField(max_length=2, blank=True, default="")
-    geo_country_name = models.CharField(max_length=255, blank=True, default="")
-    geo_source = models.CharField(
-        max_length=32, blank=True, default="",
-        help_text="cloudflare+ip-api, cloudflare_only, or unavailable",
-    )
-    geo_captured_at = models.DateTimeField(null=True, blank=True, default=None)
-
     @property
     def grade(self):
         return int(100 * self.correct / self.total)
