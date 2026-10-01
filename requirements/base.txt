@@ -8,6 +8,7 @@ hiredis==1.1.0  # https://github.com/redis/hiredis-py
 celery==4.4.6  # pyup: < 5.0,!=4.4.7  # https://github.com/celery/celery
 django-celery-beat==2.2.0  # https://github.com/celery/django-celery-beat
 flower==0.9.7  # https://github.com/mher/flower
+requests==2.32.3  # https://github.com/psf/requests — for ip-api.com GeoIP lookups (added 2026-10-01)
 
 # Django
 # ------------------------------------------------------------------------------

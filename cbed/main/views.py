@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.db.models import Q
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins
 from rest_framework.decorators import action
@@ -19,6 +20,7 @@ from cbed.main.serializers import (
     SectionDetailSerializer,
     SectionSearchSerializer, SubscriptionPlanSerializer,
 )
+from cbed.main.utils import capture_request_geo
 from cbed.transactions.enums import MemberPlanChoices
 from cbed.users.models import User
 
@@ -87,6 +89,23 @@ class SectionViewSet(ReadOnlyModelViewSet):
             result, _ = Result.objects.get_or_create(section=section, user=user)
             result.correct = serializer.validated_data["correct"]
             result.total = serializer.validated_data["total"]
+
+            # Capture client IP + GeoIP metadata (added 2026-10-01).
+            # Never block quiz save on geo lookup failures.
+            try:
+                geo = capture_request_geo(request)
+                result.client_ip = geo.get('ip') or None
+                result.geo_city = geo.get('city') or ''
+                result.geo_region = geo.get('region') or ''
+                result.geo_country = (geo.get('country') or '')[:2]
+                result.geo_country_name = geo.get('country_name') or ''
+                result.geo_source = geo.get('geo_source') or ''
+                if geo.get('geo_source') and geo['geo_source'] != 'unavailable':
+                    result.geo_captured_at = timezone.now()
+            except Exception:
+                # GeoIP is best-effort; never break the quiz save flow.
+                pass
+
             result.save()
 
             mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()
