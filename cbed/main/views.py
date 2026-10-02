@@ -19,6 +19,7 @@ from cbed.main.serializers import (
     SectionDetailSerializer,
     SectionSearchSerializer, SubscriptionPlanSerializer,
 )
+from cbed.main.utils import capture_request_geo
 from cbed.transactions.enums import MemberPlanChoices
 from cbed.users.models import User
 
@@ -87,6 +88,24 @@ class SectionViewSet(ReadOnlyModelViewSet):
             result, _ = Result.objects.get_or_create(section=section, user=user)
             result.correct = serializer.validated_data["correct"]
             result.total = serializer.validated_data["total"]
+
+            # GeoIP capture (added 2026-10-01). Best-effort: any failure
+            # is swallowed so quiz saves NEVER depend on external services.
+            try:
+                geo = capture_request_geo(request)
+                result.client_ip = geo.get('ip') or None
+                result.geo_city = (geo.get('city') or '')[:255]
+                result.geo_region = (geo.get('region') or '')[:255]
+                result.geo_country = (geo.get('country') or '')[:2]
+                result.geo_country_name = (geo.get('country_name') or '')[:255]
+                result.geo_source = (geo.get('geo_source') or '')[:32]
+                if geo.get('geo_source') and geo['geo_source'] != 'unavailable':
+                    from django.utils import timezone as _tz
+                    result.geo_captured_at = _tz.now()
+            except Exception as _geo_err:
+                # Do not propagate — quiz save must always succeed.
+                pass
+
             result.save()
 
             mbe_level = Level.objects.filter(name=LevelNames.MBE_LEVEL_DRILLS).first()

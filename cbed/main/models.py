@@ -82,6 +82,18 @@ class Result(TimeStampedModel):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     correct = models.IntegerField(default=0)
     total = models.IntegerField(default=1, validators=[MinValueValidator(1)])
+    # GeoIP capture (added 2026-10-01) — populated by cbed.main.utils.capture_request_geo
+    # on every save_result POST. Bypasses GA4's city-throttling.
+    client_ip = models.GenericIPAddressField(blank=True, default=None, null=True)
+    geo_city = models.CharField(blank=True, default='', max_length=255)
+    geo_region = models.CharField(blank=True, default='', max_length=255)
+    geo_country = models.CharField(blank=True, default='', max_length=2)
+    geo_country_name = models.CharField(blank=True, default='', max_length=255)
+    geo_source = models.CharField(
+        blank=True, default='', max_length=32,
+        help_text='cloudflare+ip-api, cloudflare_only, ip-api_only, or unavailable',
+    )
+    geo_captured_at = models.DateTimeField(blank=True, default=None, null=True)
 
     @property
     def grade(self):
