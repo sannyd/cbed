@@ -5,6 +5,7 @@ from django.db.models import (
     CharField,
     DateTimeField,
     ForeignKey,
+    GenericIPAddressField,
     ImageField,
     Sum, IntegerField,
 )
@@ -195,6 +196,16 @@ class User(AbstractUser):
     is_tutor_for_bed = BooleanField(default=False)
     essay_count = IntegerField(default=0)
     mpt_count = IntegerField(default=0)
+
+    # 2026-10-12 — Real-time activity tracker. last_active is set by
+    # cbed.middleware.activity_tracker on every authenticated request,
+    # debounced to once per 5 minutes per user. last_login_ip and
+    # last_login_user_agent are captured on authed requests for IP-based
+    # correlation. Indexed because the get_realtime_users command and
+    # reconcile_student_geo.py sweep will both query by IP and by recency.
+    last_active = DateTimeField(null=True, blank=True, db_index=True)
+    last_login_ip = GenericIPAddressField(null=True, blank=True, db_index=True)
+    last_login_user_agent = CharField(blank=True, default="", max_length=512)
 
     @property
     def member_plan_simple(self):
