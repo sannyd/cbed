@@ -143,6 +143,10 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    # 2026-10-12 — Real-time user activity tracker. Must come AFTER
+    # AuthenticationMiddleware so request.user is populated. Skips
+    # anonymous requests internally; cheap path on every authed API hit.
+    "cbed.middleware.activity_tracker.ActivityTrackerMiddleware",
     # "django.middleware.common.BrokenLinkEmailsMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
