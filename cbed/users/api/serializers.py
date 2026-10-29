@@ -75,6 +75,12 @@ class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            # V11.3: expose the account id. The iOS Profile/Update Account
+            # screen displays it as "User ID: <id>", and the same value is
+            # pushed to Firebase Analytics via Analytics.setUserID(). It was
+            # previously absent from this list, so ProfileInfoM.id decoded
+            # as nil and the Firebase attribution never fired.
+            "id",
             "email",
             "avatar",
             "name",
