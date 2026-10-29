@@ -188,42 +188,56 @@ def fill_up_profile(user: User):
         user.current_sec_trans_level = start_wills_section
         print(f"User {user} has been assigned to SEC_TRANS_LEVEL.")
 
-        # ═══════════════════════════════════════════════════════════════
-        # LEVEL 1 PIPELINE DEFAULTS (IQS Counseling, IQS Drafting, NG SPT,
-        # NG LRPT, Mixed MBE). Hardcoded section IDs match the constants
-        # used in the backfill SQL; fall back to dynamic Level lookup if a
-        # specific section is missing (e.g. removed).
-        # ═══════════════════════════════════════════════════════════════
-        _level1_defaults = [
-            ("current_mixed_mbe_section", 55001, LevelNames.MIXED_MBE_SETS, "MIXED_MBE"),
-            ("current_drafting_section",   50001, LevelNames.DRAFTING_SETS,   "DRAFTING"),
-            ("current_counseling_section", 51001, LevelNames.COUNSELING_SETS, "COUNSELING"),
-            ("current_ng_spt_section",     53001, LevelNames.STANDARD_PERF_TASKS, "NG_SPT"),
-            ("current_ng_lrpt_section",    54001, LevelNames.LRPTS,           "NG_LRPT"),
-        ]
-        for attr, hardcoded_id, level_name, label in _level1_defaults:
-            if getattr(user, attr) is not None:
-                continue
-            specific = Section.objects.filter(id=hardcoded_id).first()
-            if specific is not None:
-                setattr(user, attr, specific)
-                print(f"User {user} has been assigned to {label} (id={hardcoded_id}).")
-            else:
-                level = Level.objects.filter(name=level_name).first()
-                if level:
-                    fallback = (
-                        Section.objects.filter(level=level)
-                        .order_by("order")
-                        .first()
-                    )
-                    if fallback:
-                        setattr(user, attr, fallback)
-                        print(
-                            f"User {user} has been assigned to {label} "
-                            f"(fallback id={fallback.id})."
-                        )
 
-        user.save()
+    # ═══════════════════════════════════════════════════════════════════
+    # LEVEL 1 PIPELINE DEFAULTS (IQS Counseling, IQS Drafting, NG SPT,
+    # NG LRPT, Mixed MBE, NG 1-Choice MCQ, NG 2-Choice MCQ). Hardcoded
+    # section IDs match the constants used in the backfill SQL; fall back
+    # to dynamic Level lookup if a specific section is missing (e.g.
+    # removed).
+    #
+    # NOTE: this block and the `user.save()` below are deliberately at
+    # FUNCTION level, not nested inside the Sec Trans conditional above.
+    # They used to live inside `if sec_trans_level and
+    # user.current_sec_trans_level is None:`, which meant that once a
+    # user already had a Sec Trans section, `user.save()` was never
+    # reached and any FK assigned here was silently dropped (Django's
+    # ORM writes every column on save, so an in-memory assignment that
+    # is never saved does not persist). Sign-in calls fill_up_profile()
+    # too, so this path must always run and always save.
+    # ═══════════════════════════════════════════════════════════════════
+    _level1_defaults = [
+        ("current_mixed_mbe_section", 55001, LevelNames.MIXED_MBE_SETS, "MIXED_MBE"),
+        ("current_drafting_section",   50001, LevelNames.DRAFTING_SETS,   "DRAFTING"),
+        ("current_counseling_section", 51001, LevelNames.COUNSELING_SETS, "COUNSELING"),
+        ("current_ng_spt_section",     53001, LevelNames.STANDARD_PERF_TASKS, "NG_SPT"),
+        ("current_ng_lrpt_section",    54001, LevelNames.LRPTS,           "NG_LRPT"),
+        ("current_ng_mcq_1_choice_section", 49808, LevelNames.NG_MCQ_1_CHOICE, "NG_MCQ_1_CHOICE"),
+        ("current_ng_mcq_2_choice_section", 49815, LevelNames.NG_MCQ_2_CHOICE, "NG_MCQ_2_CHOICE"),
+    ]
+    for attr, hardcoded_id, level_name, label in _level1_defaults:
+        if getattr(user, attr) is not None:
+            continue
+        specific = Section.objects.filter(id=hardcoded_id).first()
+        if specific is not None:
+            setattr(user, attr, specific)
+            print(f"User {user} has been assigned to {label} (id={hardcoded_id}).")
+        else:
+            level = Level.objects.filter(name=level_name).first()
+            if level:
+                fallback = (
+                    Section.objects.filter(level=level)
+                    .order_by("order")
+                    .first()
+                )
+                if fallback:
+                    setattr(user, attr, fallback)
+                    print(
+                        f"User {user} has been assigned to {label} "
+                        f"(fallback id={fallback.id})."
+                    )
+
+    user.save()
 
 
 class AppSerializer(Serializer):
