@@ -12,11 +12,19 @@ User = get_user_model()
 class UserAdmin(auth_admin.UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
+    # Show the database primary key on the change form as a read-only row,
+    # so staff can look up a user by ID (e.g. from an App Store screenshot
+    # or a support ticket) without leaving the admin.
+    #
+    # Inherit the base class's readonly_fields rather than overwriting it, so
+    # any read-only field Django's own UserAdmin defines is preserved.
+    readonly_fields = ("id",) + tuple(auth_admin.UserAdmin.readonly_fields)
     fieldsets = (
         (
             None,
             {
                 "fields": (
+                    "id",
                     "username",
                     "password",
                     "is_tutor",
